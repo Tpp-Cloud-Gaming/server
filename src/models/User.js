@@ -12,5 +12,5 @@ export const User = sequelize.define('users', {
     credits:{
         type: DataTypes.INTEGER
     }
-}, {timestamps: true}
+}, {timestamps: false}
 );

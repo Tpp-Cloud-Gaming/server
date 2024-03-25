@@ -12,5 +12,5 @@ export const Game = sequelize.define('games', {
     description:{
         type: DataTypes.STRING
     }
-}, {timestamps: true}
+}, {timestamps: false}
 );
