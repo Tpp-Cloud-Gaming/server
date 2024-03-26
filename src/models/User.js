@@ -10,7 +10,8 @@ export const User = sequelize.define('users', {
         type:DataTypes.STRING
     },
     credits:{
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        defaultValue: 0
     }
 }, {timestamps: false}
 );
