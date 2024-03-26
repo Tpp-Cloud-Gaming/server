@@ -12,6 +12,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD_FILE: /run/secrets/db-password
       POSTGRES_DB: example
+      POSTGRES_PORT: 5432
     depends_on:
       db:
         condition: service_healthy
