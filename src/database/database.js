@@ -9,10 +9,12 @@ const {
     POSTGRES_PASSWORD_FILE: PASSWORD_FILE,
     POSTGRES_DB: DB,
     POSTGRES_DB_FILE: DB_FILE,
+    POSTGRES_PORT: DB_PORT
 } = process.env;
 
 export const sequelize = new Sequelize ('',USER, 'hola123', {
     host: HOST,
-    dialect:'postgres'
+    dialect:'postgres',
+    port: DB_PORT
 });
 
