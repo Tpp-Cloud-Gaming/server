@@ -5,6 +5,7 @@ on:
       - main
 jobs:
   tests:
+    name: Run tests
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository

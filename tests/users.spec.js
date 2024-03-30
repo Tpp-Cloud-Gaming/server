@@ -48,7 +48,12 @@ describe ("POST /users", () => {
     }
     test("Should respond with a 200 status code", async () => {
         const response = await request(app).post("/users").send(newUser);
-        console.log(response)
         expect(response.statusCode).toBe(200);
+    })
+});
+
+describe ("Testss", () => {
+    test("1 equals 2", async () => {
+        expect(1).toBe(2);
     })
 });

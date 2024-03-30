@@ -15,6 +15,7 @@ export const sequelize = new Sequelize (DB,USER, 'hola123', { // TODO: Check why
     host: HOST,
     dialect:'postgres',
     port: DB_PORT,
+    logging: false,
 });
 
 
