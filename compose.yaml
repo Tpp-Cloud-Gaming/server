@@ -10,7 +10,7 @@ services:
       NODE_ENV: production
       POSTGRES_HOST: db
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD_FILE: /run/secrets/db-password
+      POSTGRES_PASSWORD: 'hola123'
       POSTGRES_DB: example
       POSTGRES_PORT: 5432
     depends_on:
@@ -31,6 +31,8 @@ services:
     environment:
       - POSTGRES_DB=example
       - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
+    ports:
+      - 5432:5432
     expose:
       - 5432
     healthcheck:

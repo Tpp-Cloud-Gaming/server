@@ -2,19 +2,20 @@ import Sequelize from "sequelize";
 
 const {
     POSTGRES_HOST: HOST,
-    POSTGRES_HOST_FILE: HOST_FILE,
     POSTGRES_USER: USER,
-    POSTGRES_USER_FILE: USER_FILE,
     POSTGRES_PASSWORD: PASSWORD,
-    POSTGRES_PASSWORD_FILE: PASSWORD_FILE,
     POSTGRES_DB: DB,
-    POSTGRES_DB_FILE: DB_FILE,
     POSTGRES_PORT: DB_PORT
 } = process.env;
 
-export const sequelize = new Sequelize ('',USER, 'hola123', {
+console.log("Enviroment:",process.env);
+
+//export const sequelize = new Sequelize (DB,USER, PASSWORD, { 
+export const sequelize = new Sequelize (DB,USER, 'hola123', { // TODO: Check why env variable does not work
     host: HOST,
     dialect:'postgres',
-    port: DB_PORT
+    port: DB_PORT,
 });
+
+
 

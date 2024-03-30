@@ -1,11 +1,14 @@
 import express from "express";
-import userRoutes from "./routes/users.routes.js"
+import {createUserRouter} from "./routes/users.routes.js"
 
-const app = express();
+export const createApp = () => {
+    const app = express();
+    
+    //middlewares
+    app.use(express.json())
+        
+    app.use(createUserRouter());
 
-//middlewares
-app.use(express.json())
+    return app
+}
 
-app.use(userRoutes);
-
-export default app;
