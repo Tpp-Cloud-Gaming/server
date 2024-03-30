@@ -9,7 +9,7 @@ const {
     POSTGRES_SSL: SSL
 } = process.env;
 
-console.log("Enviroment:",process.env);
+
 
 let dbOptions = {
     host: HOST,
