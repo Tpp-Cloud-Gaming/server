@@ -11,7 +11,7 @@ const {
 
 
 //export const sequelize = new Sequelize (DB,USER, PASSWORD, { 
-export const sequelize = new Sequelize (DB,USER, 'hola123', { // TODO: Check why env variable does not work
+export const sequelize = new Sequelize (DB,USER, PASSWORD, { // TODO: Check why env variable does not work
     host: HOST,
     dialect:'postgres',
     port: DB_PORT,

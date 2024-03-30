@@ -52,8 +52,3 @@ describe ("POST /users", () => {
     })
 });
 
-describe ("Testss", () => {
-    test("1 equals 2", async () => {
-        expect(1).toBe(2);
-    })
-});
