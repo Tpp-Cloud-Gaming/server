@@ -8,7 +8,7 @@ const {
     POSTGRES_PORT: DB_PORT
 } = process.env;
 
-console.log("Enviroment:",process.env);
+
 
 //export const sequelize = new Sequelize (DB,USER, PASSWORD, { 
 export const sequelize = new Sequelize (DB,USER, 'hola123', { // TODO: Check why env variable does not work
