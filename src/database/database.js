@@ -16,6 +16,12 @@ export const sequelize = new Sequelize (DB,USER, PASSWORD, { // TODO: Check why 
     dialect:'postgres',
     port: DB_PORT,
     logging: false,
+    ssl: true, // Enforce SSL connection
+    dialectOptions: {
+      ssl: {
+        require: true // Require SSL connection
+      }
+    }
 });
 
 
