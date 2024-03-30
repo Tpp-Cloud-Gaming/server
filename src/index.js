@@ -5,14 +5,14 @@ import "./models/Game.js"
 import "./models/UserGame.js"
 
 async function main () {
-  try {
+  // try {
     await sequelize.sync({force:true})
     
     console.log("Connection to Databases established")
-  }
-  catch {
-    console.log("Unable to connect")
-  }
+  // }
+  // catch {
+  //   console.log("Unable to connect")
+  // }
 }
 
 
