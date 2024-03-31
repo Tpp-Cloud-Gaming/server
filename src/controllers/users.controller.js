@@ -15,14 +15,14 @@ export class UserController {
     }
     createUser = async (req,res) => {
         const {name,email} = req.body
-        // try {          
+        try {          
             const newUser = await User.create({
                 name,
                 email
             });
             return res.json(newUser)
-        // } catch (error) {
-        //     return res.status(400).json({"message": error.message})
-        // }
+        } catch (error) {
+            return res.status(400).json({"message": error.message})
+        }
     }
 }    

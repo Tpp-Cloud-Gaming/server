@@ -6,16 +6,21 @@
   "type": "module",
   "scripts": {
     "test": "npx jest",
-    "dev": "nodemon --inspect=0.0.0.0:9229 -L src/index.js"
+    "dev": "nodemon --inspect=0.0.0.0:9229 -L src/index.js",
+    "swagger-autogen": "node src/swagger.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "and": "^0.0.3",
     "express": "^4.19.1",
+    "express-validator": "^7.0.1",
     "morgan": "^1.10.0",
     "pg": "^8.11.3",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.37.1"
+    "sequelize": "^6.37.1",
+    "swagger-autogen": "^2.23.7",
+    "swagger-ui-express": "^5.0.0"
   },
   "devDependencies": {
     "@testcontainers/postgresql": "^10.8.0",

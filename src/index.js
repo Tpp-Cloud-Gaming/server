@@ -3,6 +3,11 @@ import { sequelize } from "./database/database.js";
 import "./models/User.js"
 import "./models/Game.js"
 import "./models/UserGame.js"
+import swaggerUi from 'swagger-ui-express';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+
+const swaggerFile = require('./swagger_output.json');
 
 async function main () {
   // try {
@@ -15,18 +20,15 @@ async function main () {
   // }
 }
 
-
 const app = createApp()
 main()
 
+
 const PORT = 3000
+
 app.disable('x-powered-by')
 
-
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-  
-})
+app.use('/',swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`)
