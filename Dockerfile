@@ -22,11 +22,7 @@ RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=cache,target=/root/.npm \
     npm ci --omit=dev
 
-USER node
+USER root
 COPY . .
-
-COPY service-account-file.json /usr/src/app/service-account-file.json
-RUN chown node:node /usr/src/app/service-account-file.json
-RUN chmod 400 /usr/src/app/service-account-file.json
 
 CMD node src/index.js
