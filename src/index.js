@@ -1,36 +1,35 @@
-import {createApp} from "./app.js";
+import { createApp } from "./app.js";
 import { sequelize } from "./database/database.js";
-import "./models/User.js"
-import "./models/Game.js"
-import "./models/UserGame.js"
-import swaggerUi from 'swagger-ui-express';
-import { createRequire } from 'module';
+import "./models/User.js";
+import "./models/Game.js";
+import "./models/UserGame.js";
+import swaggerUi from "swagger-ui-express";
+import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 
-const swaggerFile = require('./swagger_output.json');
+const swaggerFile = require("./swagger_output.json");
 
-async function main () {
+async function main() {
   // try {
-    await sequelize.sync({force:true})
-    
-    console.log("Connection to Databases established")
+  await sequelize.authenticate();
+  await sequelize.sync({ force: true });
+
+  console.log("Connection to Databases established");
   // }
   // catch {
   //   console.log("Unable to connect")
   // }
 }
 
-const app = createApp()
-main()
+await main();
+const app = createApp();
 
+const PORT = 3000;
 
-const PORT = 3000
+app.disable("x-powered-by");
 
-app.disable('x-powered-by')
-
-app.use('/',swaggerUi.serve, swaggerUi.setup(swaggerFile))
+app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}`)
-})
-
+  console.log(`Example app listening on port ${PORT}`);
+});

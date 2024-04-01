@@ -1,28 +1,35 @@
-import {User} from "../models/User.js"
-
+import { User } from "../models/User.js";
 
 export class UserController {
-    constructor () {
-        
+  constructor() {}
+
+  getUser = async (req, res) => {
+    const username = req.params.username;
+    const user = await User.findOne({ where: { username: username } });
+    if (user === null) {
+      return res
+        .status(404)
+        .json({ message: `Username '${username}' not found` });
+    } else {
+      res.json(user);
     }
-    getUsers = async (req,res) => {
-        try {
-            const Users = await User.findAll()
-            res.json(Users)
-        } catch (error) {
-            return res.status(500).json({"message": error.message})
-        }
+  };
+
+  createUser = async (req, res) => {
+    const username = req.params.username;
+    const email = req.body.email;
+    const country = req.body.country;
+    try {
+      const newUser = await User.create({
+        username,
+        email,
+        country,
+      });
+      return res.status(201).json(newUser);
+    } catch (error) {
+      return res
+        .status(409)
+        .json({ message: `Username '${username}' already exists` });
     }
-    createUser = async (req,res) => {
-        const {name,email} = req.body
-        try {          
-            const newUser = await User.create({
-                name,
-                email
-            });
-            return res.json(newUser)
-        } catch (error) {
-            return res.status(400).json({"message": error.message})
-        }
-    }
-}    
+  };
+}

@@ -1,3 +1,3 @@
 module.exports = {
-    setupFiles: ["./jest/setEnvVars.cjs"]
+  setupFiles: ["./jest/setEnvVars.cjs"],
 };

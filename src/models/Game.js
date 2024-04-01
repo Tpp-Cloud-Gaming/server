@@ -1,16 +1,19 @@
-import {DataTypes} from 'sequelize'
-import { sequelize } from '../database/database.js'
+import { DataTypes } from "sequelize";
+import { sequelize } from "../database/database.js";
 
-export const Game = sequelize.define('games', {
+export const Game = sequelize.define(
+  "games",
+  {
     name: {
-        type: DataTypes.STRING,
-        primaryKey: true,
+      type: DataTypes.STRING,
+      primaryKey: true,
     },
     category: {
-        type:DataTypes.STRING
+      type: DataTypes.STRING,
     },
-    description:{
-        type: DataTypes.STRING
-    }
-}, {timestamps: false}
+    description: {
+      type: DataTypes.STRING,
+    },
+  },
+  { timestamps: false },
 );
