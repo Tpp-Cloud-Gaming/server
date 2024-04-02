@@ -6,6 +6,7 @@ import "../src/models/Game.js";
 import "../src/models/UserGame.js";
 import { PostgreSqlContainer } from "@testcontainers/postgresql";
 import { User } from "../src/models/User.js";
+import { Game } from "../src/models/Game.js";
 
 const app = createApp();
 let container;
@@ -40,6 +41,7 @@ afterAll(async () => {
 
 beforeEach(async () => {
   await User.destroy({ where: {} });
+  await Game.destroy({where: {} });
 });
 
 describe("POST /users/:username", () => {
@@ -128,7 +130,7 @@ describe("PUT /users/:username", () => {
       country: "Argentina",
     };
 
-    let updatedUser = { ...newUser };
+    let updatedUser = {...newUser};
     updatedUser.email = "axel@gmail.com";
     updatedUser.country = "Brazil";
     updatedUser.credits = 100;
@@ -145,6 +147,7 @@ describe("PUT /users/:username", () => {
 
     expect(response.statusCode).toBe(200);
     expect(response.body).toEqual(expectedUser);
+
   });
 
   test("Should respond with a 400 status code", async () => {
@@ -154,8 +157,9 @@ describe("PUT /users/:username", () => {
     };
 
     const updatedUser = {
-      email: "axelkelman@gmail.com",
+      email: "axelkelman@gmail.com"
     };
+
 
     await request(app)
       .post("/users" + "/Axel")
@@ -165,6 +169,7 @@ describe("PUT /users/:username", () => {
       .send(updatedUser);
 
     expect(response.statusCode).toBe(400);
+
   });
 
   test("Should respond with a 404 status code", async () => {
@@ -173,11 +178,12 @@ describe("PUT /users/:username", () => {
       country: "Argentina",
     };
 
-    let updatedUser = { ...newUser };
+    let updatedUser = {...newUser};
     updatedUser.email = "axel@gmail.com";
     updatedUser.country = "Brazil";
     updatedUser.credits = 100;
 
+    
     await request(app)
       .post("/users" + "/Axel")
       .send(newUser);
@@ -186,5 +192,135 @@ describe("PUT /users/:username", () => {
       .send(updatedUser);
 
     expect(response.statusCode).toBe(404);
+
   });
+  
+});
+
+//TODO: Move this to another file
+
+describe("POST /games/:name", () => {
+  test("Should respond with a 201 status code", async () => {
+    const newGame = {
+      category: "rpg",
+      description: "El lol",
+    };
+    let expectedGame = { ...newGame };
+    expectedGame.name = "Lol";
+    expectedGame.image_1 = null;
+    expectedGame.image_2 = null;
+    expectedGame.image_3 = null;
+
+    const response = await request(app)
+      .post("/games" + "/Lol")
+      .send(newGame);
+    expect(response.statusCode).toBe(201);
+    expect(response.body).toEqual(expectedGame);
+  });
+
+  test("Should respond with a 409 status code", async () => {
+    const newGame = {
+      category: "rpg",
+      description: "El lol",
+    };
+    let otherGame = { ...newGame };
+    otherGame.name = "Lol";
+    otherGame.image_1 = null;
+    otherGame.image_2 = null;
+    otherGame.image_3 = null;
+
+    await request(app)
+      .post("/games" + "/Lol")
+      .send(newGame);
+    const response = await request(app)
+      .post("/games" + "/Lol")
+      .send(otherGame);
+    expect(response.statusCode).toBe(409);
+    
+  });
+
+  test("Should respond with a 404 status code", async () => {
+    const newGame = {
+      category: "rpg",
+    };   
+
+    const response = await request(app)
+      .post("/games" + "/Lol")
+      .send(newGame);
+    expect(response.statusCode).toBe(400);    
+  });
+
+  
+});
+
+
+describe("GET /games", () => {
+  test("Should respond with a 200 status code", async () => {
+    const newGame = {
+      category: "rpg",
+      description: "El lol",
+    };
+    let expectedGame = { ...newGame };
+    expectedGame.name = "Lol";
+    expectedGame.image_1 = null;
+    expectedGame.image_2 = null;
+    expectedGame.image_3 = null;
+
+    await request(app)
+      .post("/games" + "/Lol")
+      .send(newGame);
+    const response = await request(app)
+    .get("/games")
+    .send(newGame);
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toEqual([expectedGame]);
+  });
+
+    
+});
+
+describe("PUT /games/:name", () => {
+  test("Should respond with a 200 status code", async () => {
+    const newGame = {
+      category: "rpg",
+      description: "El lol",
+    };
+    let updatedGame = { ...newGame };
+    updatedGame.name = "Lol";
+    updatedGame.image_1 = "asd";
+    updatedGame.image_2 = null;
+    updatedGame.image_3 = null;
+
+    await request(app)
+      .post("/games" + "/Lol")
+      .send(newGame);
+    const response = await request(app)
+      .put("/games" + "/Lol")
+      .send(updatedGame);
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toEqual(updatedGame);
+  });
+
+  test("Should respond with a 404 status code", async () => {
+    const newGame = {
+      category: "rpg",
+      description: "El lol",
+    };
+    let updatedGame = { ...newGame };
+    updatedGame.name = "Lol";
+    updatedGame.image_1 = "asd";
+    updatedGame.image_2 = null;
+    updatedGame.image_3 = null;
+
+    await request(app)
+      .post("/games" + "/Lol")
+      .send(newGame);
+    const response = await request(app)
+      .put("/games" + "/Lol2")
+      .send(updatedGame);
+    expect(response.statusCode).toBe(404);
+  });
+  
+
+  
 });

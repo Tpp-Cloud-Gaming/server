@@ -8,7 +8,8 @@ const validateCreateUser = [
     .withMessage("Email is required")
     .bail()
     .isEmail()
-    .withMessage("Invalid Email"),
+    .withMessage("Invalid Email")
+    .bail(),
   body("country").notEmpty().withMessage("Country is required").bail(),
 ];
 

@@ -1,5 +1,6 @@
 import express from "express";
 import { createUserRouter } from "./routes/users.routes.js";
+import { createGameRouter } from "./routes/games.routes.js";
 import { verifyFirebaseToken } from "./middlewares/firebase.auth.js";
 
 export const createApp = () => {
@@ -11,6 +12,7 @@ export const createApp = () => {
   app.use(verifyFirebaseToken);
 
   app.use(createUserRouter());
+  app.use(createGameRouter());
 
   return app;
 };
