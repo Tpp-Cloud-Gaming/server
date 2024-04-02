@@ -17,8 +17,7 @@ export class UserController {
 
   createUser = async (req, res) => {
     const username = req.params.username;
-    const email = req.body.email;
-    const country = req.body.country;
+    const { email, country } = req.body;
     try {
       const newUser = await User.create({
         username,
@@ -30,6 +29,26 @@ export class UserController {
       return res
         .status(409)
         .json({ message: `Username '${username}' already exists` });
+    }
+  };
+
+  updateUser = async (req, res) => {
+    const username = req.params.username;
+    const { email, country, credits } = req.body;
+    try {
+      const updatedUser = await User.findOne({ where: { username: username } });
+      updatedUser.set({
+        username,
+        email,
+        country,
+        credits,
+      });
+      await updatedUser.save();
+      return res.status(200).json(updatedUser);
+    } catch (error) {
+      return res
+        .status(404)
+        .json({ message: `Username '${username}' not found` });
     }
   };
 }

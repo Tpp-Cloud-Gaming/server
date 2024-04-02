@@ -12,6 +12,11 @@ const validateCreateUser = [
   body("country").notEmpty().withMessage("Country is required").bail(),
 ];
 
+let validateUpdateUser = [...validateCreateUser];
+validateUpdateUser.push(
+  body("credits").notEmpty().withMessage("Credits is required").bail(),
+);
+
 export const createUserRouter = () => {
   const router = Router();
   const userController = new UserController();
@@ -25,6 +30,15 @@ export const createUserRouter = () => {
     }
 
     await userController.createUser(req, res);
+  });
+
+  router.put("/users/:username", validateUpdateUser, async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    await userController.updateUser(req, res);
   });
 
   return router;

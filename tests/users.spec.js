@@ -120,3 +120,71 @@ describe("GET /users/:username", () => {
     expect(response.statusCode).toBe(404);
   });
 });
+
+describe("PUT /users/:username", () => {
+  test("Should respond with a 200 status code", async () => {
+    const newUser = {
+      email: "hola@gmail.com",
+      country: "Argentina",
+    };
+
+    let updatedUser = { ...newUser };
+    updatedUser.email = "axel@gmail.com";
+    updatedUser.country = "Brazil";
+    updatedUser.credits = 100;
+
+    let expectedUser = { ...updatedUser };
+    expectedUser.username = "Axel";
+
+    await request(app)
+      .post("/users" + "/Axel")
+      .send(newUser);
+    const response = await request(app)
+      .put("/users" + "/Axel")
+      .send(updatedUser);
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toEqual(expectedUser);
+  });
+
+  test("Should respond with a 400 status code", async () => {
+    const newUser = {
+      email: "hola@gmail.com",
+      country: "Argentina",
+    };
+
+    const updatedUser = {
+      email: "axelkelman@gmail.com",
+    };
+
+    await request(app)
+      .post("/users" + "/Axel")
+      .send(newUser);
+    const response = await request(app)
+      .put("/users" + "/Axel")
+      .send(updatedUser);
+
+    expect(response.statusCode).toBe(400);
+  });
+
+  test("Should respond with a 404 status code", async () => {
+    const newUser = {
+      email: "hola@gmail.com",
+      country: "Argentina",
+    };
+
+    let updatedUser = { ...newUser };
+    updatedUser.email = "axel@gmail.com";
+    updatedUser.country = "Brazil";
+    updatedUser.credits = 100;
+
+    await request(app)
+      .post("/users" + "/Axel")
+      .send(newUser);
+    const response = await request(app)
+      .put("/users" + "/Axel2")
+      .send(updatedUser);
+
+    expect(response.statusCode).toBe(404);
+  });
+});
