@@ -18,6 +18,12 @@ export const User = sequelize.define(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    longitude: {
+      type: DataTypes.FLOAT,
+    },
+    latitude: {
+      type: DataTypes.FLOAT,
+    },
   },
   { timestamps: false },
 );

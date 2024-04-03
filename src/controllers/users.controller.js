@@ -17,12 +17,14 @@ export class UserController {
 
   createUser = async (req, res) => {
     const username = req.params.username;
-    const { email, country } = req.body;
+    const { email, country, longitude, latitude } = req.body;
     try {
       const newUser = await User.create({
         username,
         email,
         country,
+        longitude,
+        latitude,
       });
       return res.status(201).json(newUser);
     } catch (error) {

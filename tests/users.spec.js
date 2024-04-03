@@ -49,10 +49,14 @@ describe("POST /users/:username", () => {
     const newUser = {
       email: "hola@gmail.com",
       country: "Argentina",
+      longitude: 1.0,
+      latitude: 1.0,
     };
     let expectedUser = { ...newUser };
     expectedUser.username = "Axel";
     expectedUser.credits = 0;
+    expectedUser.longitude = 1.0;
+    expectedUser.latitude = 1.0;
     const response = await request(app)
       .post("/users" + "/Axel")
       .send(newUser);
@@ -95,10 +99,14 @@ describe("GET /users/:username", () => {
     const newUser = {
       email: "hola@gmail.com",
       country: "Argentina",
+      latitude: 1.0,
+      longitude: 1.0,
     };
     let expectedUser = { ...newUser };
     expectedUser.username = "Axel";
     expectedUser.credits = 0;
+    expectedUser.latitude = 1.0;
+    expectedUser.longitude = 1.0;
     await request(app)
       .post("/users" + "/Axel")
       .send(newUser);
@@ -128,6 +136,8 @@ describe("PUT /users/:username", () => {
     const newUser = {
       email: "hola@gmail.com",
       country: "Argentina",
+      latitude: 1.0,
+      longitude: 1.0,
     };
 
     let updatedUser = {...newUser};
@@ -137,6 +147,8 @@ describe("PUT /users/:username", () => {
 
     let expectedUser = { ...updatedUser };
     expectedUser.username = "Axel";
+    expectedUser.latitude = 1.0;
+    expectedUser.longitude = 1.0;
 
     await request(app)
       .post("/users" + "/Axel")
@@ -154,6 +166,8 @@ describe("PUT /users/:username", () => {
     const newUser = {
       email: "hola@gmail.com",
       country: "Argentina",
+      latitude: 1.0,
+      longitude: 1.0,
     };
 
     const updatedUser = {
@@ -176,6 +190,8 @@ describe("PUT /users/:username", () => {
     const newUser = {
       email: "hola@gmail.com",
       country: "Argentina",
+      latitude: 1.0,
+      longitude: 1.0,
     };
 
     let updatedUser = {...newUser};
