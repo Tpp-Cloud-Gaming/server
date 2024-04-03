@@ -17,12 +17,11 @@ export class UserController {
 
   createUser = async (req, res) => {
     const username = req.params.username;
-    const { email, country, longitude, latitude } = req.body;
+    const { email, longitude, latitude } = req.body;
     try {
       const newUser = await User.create({
         username,
         email,
-        country,
         longitude,
         latitude,
       });
@@ -36,13 +35,14 @@ export class UserController {
 
   updateUser = async (req, res) => {
     const username = req.params.username;
-    const { email, country, credits } = req.body;
+    const { email, credits, longitude, latitude } = req.body;
     try {
       const updatedUser = await User.findOne({ where: { username: username } });
       updatedUser.set({
         username,
         email,
-        country,
+        longitude,
+        latitude,
         credits,
       });
       await updatedUser.save();

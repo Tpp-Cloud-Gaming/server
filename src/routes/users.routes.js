@@ -10,7 +10,8 @@ const validateCreateUser = [
     .isEmail()
     .withMessage("Invalid Email")
     .bail(),
-  body("country").notEmpty().withMessage("Country is required").bail(),
+  body("latitude").notEmpty().withMessage("Latitude is required").bail(),
+  body("longitude").notEmpty().withMessage("Longitude is required").bail(),
 ];
 
 let validateUpdateUser = [...validateCreateUser];

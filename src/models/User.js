@@ -11,9 +11,6 @@ export const User = sequelize.define(
     email: {
       type: DataTypes.STRING,
     },
-    country: {
-      type: DataTypes.STRING,
-    },
     credits: {
       type: DataTypes.INTEGER,
       defaultValue: 0,

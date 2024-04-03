@@ -3,10 +3,7 @@ import { body, validationResult } from "express-validator";
 import { GameController } from "../controllers/games.controller.js";
 
 const validateCreateOrUpdateGame = [
-  body("category")
-    .notEmpty()
-    .withMessage("Category is required")
-    .bail(),
+  body("category").notEmpty().withMessage("Category is required").bail(),
   body("description").notEmpty().withMessage("Description is required").bail(),
 ];
 

@@ -15,14 +15,14 @@ export const Game = sequelize.define(
       type: DataTypes.STRING,
     },
     image_1: {
-      type: DataTypes.STRING,          
+      type: DataTypes.STRING,
     },
     image_2: {
-      type: DataTypes.STRING,    
+      type: DataTypes.STRING,
     },
     image_3: {
-      type: DataTypes.STRING,    
-    }
+      type: DataTypes.STRING,
+    },
   },
   { timestamps: false },
 );

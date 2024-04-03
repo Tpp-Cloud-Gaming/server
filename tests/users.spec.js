@@ -41,22 +41,19 @@ afterAll(async () => {
 
 beforeEach(async () => {
   await User.destroy({ where: {} });
-  await Game.destroy({where: {} });
+  await Game.destroy({ where: {} });
 });
 
 describe("POST /users/:username", () => {
   test("Should respond with a 201 status code", async () => {
     const newUser = {
       email: "hola@gmail.com",
-      country: "Argentina",
       longitude: 1.0,
       latitude: 1.0,
     };
     let expectedUser = { ...newUser };
     expectedUser.username = "Axel";
     expectedUser.credits = 0;
-    expectedUser.longitude = 1.0;
-    expectedUser.latitude = 1.0;
     const response = await request(app)
       .post("/users" + "/Axel")
       .send(newUser);
@@ -67,7 +64,8 @@ describe("POST /users/:username", () => {
   test("Should respond with a 409 status code", async () => {
     const newUser = {
       email: "hola@gmail.com",
-      country: "Argentina",
+      longitude: 1.0,
+      latitude: 1.0,
     };
     let expectedUser = { ...newUser };
     expectedUser.username = "Axel";
@@ -98,7 +96,6 @@ describe("GET /users/:username", () => {
   test("Should respond with a 200 status code", async () => {
     const newUser = {
       email: "hola@gmail.com",
-      country: "Argentina",
       latitude: 1.0,
       longitude: 1.0,
     };
@@ -118,7 +115,6 @@ describe("GET /users/:username", () => {
   test("Should respond with a 404 status code", async () => {
     const newUser = {
       email: "hola@gmail.com",
-      country: "Argentina",
     };
     let expectedUser = { ...newUser };
     expectedUser.username = "Axel";
@@ -135,20 +131,16 @@ describe("PUT /users/:username", () => {
   test("Should respond with a 200 status code", async () => {
     const newUser = {
       email: "hola@gmail.com",
-      country: "Argentina",
       latitude: 1.0,
       longitude: 1.0,
     };
 
-    let updatedUser = {...newUser};
+    let updatedUser = { ...newUser };
     updatedUser.email = "axel@gmail.com";
-    updatedUser.country = "Brazil";
     updatedUser.credits = 100;
 
     let expectedUser = { ...updatedUser };
     expectedUser.username = "Axel";
-    expectedUser.latitude = 1.0;
-    expectedUser.longitude = 1.0;
 
     await request(app)
       .post("/users" + "/Axel")
@@ -159,21 +151,18 @@ describe("PUT /users/:username", () => {
 
     expect(response.statusCode).toBe(200);
     expect(response.body).toEqual(expectedUser);
-
   });
 
   test("Should respond with a 400 status code", async () => {
     const newUser = {
       email: "hola@gmail.com",
-      country: "Argentina",
       latitude: 1.0,
       longitude: 1.0,
     };
 
     const updatedUser = {
-      email: "axelkelman@gmail.com"
+      email: "axelkelman@gmail.com",
     };
-
 
     await request(app)
       .post("/users" + "/Axel")
@@ -183,23 +172,19 @@ describe("PUT /users/:username", () => {
       .send(updatedUser);
 
     expect(response.statusCode).toBe(400);
-
   });
 
   test("Should respond with a 404 status code", async () => {
     const newUser = {
       email: "hola@gmail.com",
-      country: "Argentina",
       latitude: 1.0,
       longitude: 1.0,
     };
 
-    let updatedUser = {...newUser};
+    let updatedUser = { ...newUser };
     updatedUser.email = "axel@gmail.com";
-    updatedUser.country = "Brazil";
     updatedUser.credits = 100;
 
-    
     await request(app)
       .post("/users" + "/Axel")
       .send(newUser);
@@ -208,9 +193,7 @@ describe("PUT /users/:username", () => {
       .send(updatedUser);
 
     expect(response.statusCode).toBe(404);
-
   });
-  
 });
 
 //TODO: Move this to another file
@@ -252,23 +235,19 @@ describe("POST /games/:name", () => {
       .post("/games" + "/Lol")
       .send(otherGame);
     expect(response.statusCode).toBe(409);
-    
   });
 
   test("Should respond with a 404 status code", async () => {
     const newGame = {
       category: "rpg",
-    };   
+    };
 
     const response = await request(app)
       .post("/games" + "/Lol")
       .send(newGame);
-    expect(response.statusCode).toBe(400);    
+    expect(response.statusCode).toBe(400);
   });
-
-  
 });
-
 
 describe("GET /games", () => {
   test("Should respond with a 200 status code", async () => {
@@ -285,14 +264,10 @@ describe("GET /games", () => {
     await request(app)
       .post("/games" + "/Lol")
       .send(newGame);
-    const response = await request(app)
-    .get("/games")
-    .send(newGame);
+    const response = await request(app).get("/games").send(newGame);
     expect(response.statusCode).toBe(200);
     expect(response.body).toEqual([expectedGame]);
   });
-
-    
 });
 
 describe("PUT /games/:name", () => {
@@ -336,7 +311,4 @@ describe("PUT /games/:name", () => {
       .send(updatedGame);
     expect(response.statusCode).toBe(404);
   });
-  
-
-  
 });
