@@ -19,6 +19,14 @@ validateUpdateUser.push(
   body("credits").notEmpty().withMessage("Credits is required").bail(),
 );
 
+const validateCreteOrUpdateUserGames = [
+  body("*.gamename")
+    .notEmpty()
+    .withMessage("Gamename is required for each item")
+    .bail(),
+  body("*.path").notEmpty().withMessage("Path is required for each item"),
+];
+
 export const createUserRouter = () => {
   const router = Router();
   const userController = new UserController();
@@ -42,6 +50,19 @@ export const createUserRouter = () => {
 
     await userController.updateUser(req, res);
   });
+
+  router.post(
+    "/users/:username/games",
+    validateCreteOrUpdateUserGames,
+    async (req, res) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+
+      await userController.createorUpdateUserGames(req, res);
+    },
+  );
 
   return router;
 };

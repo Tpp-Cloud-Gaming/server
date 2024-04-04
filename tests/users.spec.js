@@ -7,6 +7,7 @@ import "../src/models/UserGame.js";
 import { PostgreSqlContainer } from "@testcontainers/postgresql";
 import { User } from "../src/models/User.js";
 import { Game } from "../src/models/Game.js";
+import { UserGame } from "../src/models/UserGame.js";
 
 const app = createApp();
 let container;
@@ -42,6 +43,7 @@ afterAll(async () => {
 beforeEach(async () => {
   await User.destroy({ where: {} });
   await Game.destroy({ where: {} });
+  await UserGame.destroy({ where: {} });
 });
 
 describe("POST /users/:username", () => {
@@ -310,5 +312,45 @@ describe("PUT /games/:name", () => {
       .put("/games" + "/Lol2")
       .send(updatedGame);
     expect(response.statusCode).toBe(404);
+  });
+});
+
+// TODO: Add more usergame tests and move to other file
+describe("POST user/:username/games", () => {
+  test("Should respond with 200", async () => {
+    const newGame = {
+      category: "rpg",
+      description: "El lol",
+    };
+
+    const newUser = {
+      email: "hola@gmail.com",
+      longitude: 1.0,
+      latitude: 1.0,
+    };
+
+    await request(app)
+      .post("/games" + "/lol")
+      .send(newGame);
+    await request(app)
+      .post("/users" + "/axel")
+      .send(newUser);
+
+    const userGames = [
+      {
+        gamename: "lol",
+        path: "c",
+      },
+    ];
+
+    let expectedUserGames = [...userGames];
+    expectedUserGames[0].username = "axel";
+
+    const response = await request(app)
+      .post("/users" + "/axel" + "/games")
+      .send(userGames);
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toEqual(expectedUserGames);
   });
 });
