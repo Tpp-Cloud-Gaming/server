@@ -1,4 +1,5 @@
 import { User } from "../models/User.js";
+import { Game } from "../models/Game.js";
 import { UserGame } from "../models/UserGame.js";
 
 export class UserController {
@@ -6,13 +7,23 @@ export class UserController {
 
   getUser = async (req, res) => {
     const username = req.params.username;
-    const user = await User.findOne({ where: { username: username } });
+    const user = await User.findOne({
+      where: { username: req.params.username },      
+    });
+    
+    const userGames = await UserGame.findAll({
+      where: { username: username },
+      attributes: ['path', 'gamename']
+
+    });
+    
     if (user === null) {
       return res
         .status(404)
         .json({ message: `Username '${username}' not found` });
     } else {
-      res.json(user);
+      
+      res.json({user, userGames});
     }
   };
 
@@ -60,6 +71,7 @@ export class UserController {
     const userAlreadyExists = await UserGame.destroy({
       where: { username: req.params.username },
     });
+    
     try {
       const gamesToinsert = req.body.map((obj) => ({
         ...obj,
@@ -68,13 +80,14 @@ export class UserController {
       const newGames = await UserGame.bulkCreate(gamesToinsert, {
         updateOnDuplicate: ["path"],
       });
+      
       if (userAlreadyExists === null) {
         returnCode = 201;
       } else {
         returnCode = 200;
       }
       return res.status(returnCode).json(newGames);
-    } catch {
+    } catch {      
       //TODO: Check the error and make it more specific
       return res
         .status(404)

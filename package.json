@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "npx jest",
+    "test": "npx jest --runInBand",
     "dev": "nodemon --inspect=0.0.0.0:9229 -L src/index.js",
     "swagger-autogen": "node src/swagger.js",
     "prettier": "npx prettier . --write"
