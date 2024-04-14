@@ -6,6 +6,7 @@ services:
     ports:
       - 3000:3000
       - 9229:9229
+      - 4000:4000
     environment:
       GOOGLE_APPLICATION_CREDENTIALS: service-account-file.json
       NODE_ENV: production

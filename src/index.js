@@ -1,4 +1,5 @@
 import { createApp } from "./app.js";
+import './ws.js';
 import { sequelize } from "./database/database.js";
 import "./models/User.js";
 import "./models/Game.js";
