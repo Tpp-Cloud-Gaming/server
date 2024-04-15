@@ -9,7 +9,7 @@ export const createApp = () => {
   //middlewares
   app.use(express.json());
 
-  app.use(verifyFirebaseToken);
+  //app.use(verifyFirebaseToken);
 
   app.use(createUserRouter());
   app.use(createGameRouter());
