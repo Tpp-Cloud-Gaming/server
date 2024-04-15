@@ -17,7 +17,7 @@ wss.on('connection', (ws) => {
         
     // Handle incoming messages from the client
     ws.on('message', (message) => {
-        console.log(connectedUsers);
+        //console.log(connectedUsers);
         console.log(`Received message: ${message}`);
         const messageFields = message.toString().split("|");
         if (messageFields[0] === "init") {
