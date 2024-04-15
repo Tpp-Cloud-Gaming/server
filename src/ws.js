@@ -2,8 +2,8 @@
 import { WebSocketServer } from "ws";
 
 // Define the port number for the server
-const PORT = 4000;
-
+//const PORT = 4000;
+const PORT = process.env.PORT || 3000;
 // Create a WebSocket server instance
 const wss = new WebSocketServer({ port: PORT });
 
