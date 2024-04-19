@@ -2,46 +2,80 @@
 import { WebSocketServer } from "ws";
 
 // Define the port number for the server
-//const PORT = 4000;
-const PORT = process.env.PORT || 4000;
+const PORT = 4000;
+import { v4 as uuidv4 } from 'uuid';
+
 // Create a WebSocket server instance
 const wss = new WebSocketServer({ port: PORT });
 
-let connectedOfferers = {};
+let connectedOfferers = new Map();
 let connectedClients = {};
-
+let onGoningSessions =  new Map();
 // Handle new client connections
 wss.on('connection', (ws) => {
     console.log('A new client connected.');
-
-        
-    // Handle incoming messages from the client
     ws.on('message', (message) => {
-        //console.log(connectedUsers);
-        console.log(`Received message: ${message}`);
-        const messageFields = message.toString().split("|");
-        if (messageFields[0] === "init") {
-            handleInitMessage(messageFields[1],messageFields[2]);
-        }
-        
-        ws.send(`You said: ${message}`);
-    }); 
 
-    // Handle client disconnection
+        handleMessage(message, ws);
+
+    });
+
     ws.on('close', () => {
         console.log('A client disconnected.');
     });
 });
 
-// Log a message indicating the server is running
 console.log(`WebSocket server is running on port ${PORT}`);
 
-function handleInitMessage(role,username) {
-    // TODO: Chequeos?
-    if (role === "offerer") {
-        connectedOfferers[username] = username;
+function handleMessage(message, ws) {
+    const messageFields = message.toString().split("|");
+    // messageType | .....
+    const messageType = messageFields[0];
+
+    switch(messageType) {
+        case "initOfferer":
+            // initOfferer|usernameOfferer
+            var usernameOfferer = messageFields[1];
+            connectedOfferers[usernameOfferer] = ws;
+            console.log("initOfferer with username: " + usernameOfferer);
+            break;
+        case "initClient":
+            // initClient|usernameClient|usernameOfferer|gameName
+            var usernameClient = messageFields[1];
+            var usernameOfferer = messageFields[2];
+            var gameName = messageFields[3];
+            connectedClients[usernameClient] = ws;
+
+            if(connectedOfferers[usernameOfferer]) {
+                connectedOfferers[usernameOfferer].send(`sdpRequestFrom|${usernameClient}|${gameName}`);
+            }
+            else{
+                ws.send("Offerer not found");
+            }
+            break;
+
+        case "offererSdp":
+            // offererSdp|usernameClient| <sdp>
+            var usernameClient = messageFields[1];
+            var sdpOfferer = messageFields[2];
+            if(connectedClients[usernameClient]){
+                connectedClients[usernameClient].send(`sdpOfferer|${sdpOfferer}`);
+            }else{
+                ws.send("Client not found");
+            }
+            break;
+
+        case "clientSdp":
+            // clientSdp|usernameOfferer| <sdp>
+            var usernameOfferer = messageFields[1];
+            var sdpClient = messageFields[2];
+            if(connectedOfferers[usernameOfferer]){
+                connectedOfferers[usernameOfferer].send(`sdpClient|${sdpClient}`);
+            }else{
+                ws.send("Offerer not found");
+            }
+            break;
+
     }
-    else {
-        connectedClients[username] = username;
-    }
+
 }
