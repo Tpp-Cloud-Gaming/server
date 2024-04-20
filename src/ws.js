@@ -2,7 +2,7 @@
 import { WebSocketServer } from "ws";
 
 // Define the port number for the server
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 import { v4 as uuidv4 } from 'uuid';
 
 // Create a WebSocket server instance
