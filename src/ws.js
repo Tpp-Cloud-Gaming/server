@@ -1,12 +1,18 @@
 // Import the WebSocket library
 import { WebSocketServer } from "ws";
-
+import {createServer} from "http";
+import {app} from "./index.js"
 // Define the port number for the server
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 3000;
 import { v4 as uuidv4 } from 'uuid';
 
 // Create a WebSocket server instance
-const wss = new WebSocketServer({ port: PORT });
+const httpServer = createServer();
+const wss = new WebSocketServer({ server: httpServer });
+httpServer.on('request',app);
+httpServer.listen(PORT,() => {
+    console.log(`WebSocket server is running on port ${PORT}`)
+});
 
 let connectedOfferers = new Map();
 let connectedClients = {};
@@ -25,7 +31,7 @@ wss.on('connection', (ws) => {
     });
 });
 
-console.log(`WebSocket server is running on port ${PORT}`);
+//console.log(`WebSocket server is running on port ${PORT}`);
 
 function handleMessage(message, ws) {
     const messageFields = message.toString().split("|");
@@ -79,3 +85,5 @@ function handleMessage(message, ws) {
     }
 
 }
+
+
