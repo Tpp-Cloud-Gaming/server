@@ -41,15 +41,15 @@ export class UserController {
     } catch (error) {
       return res
         .status(409)
-        .json({ message: `Username '${username}' already exists` });
+        .json({ message: `Username '${username}' or email '${email}' already exists` });
     }
   };
 
   updateUser = async (req, res) => {
-    const username = req.params.username;
-    const { email, credits, longitude, latitude } = req.body;
+    const oldUsername = req.params.username;
+    const { username,email,credits, longitude, latitude } = req.body;
     try {
-      const updatedUser = await User.findOne({ where: { username: username } });
+      const updatedUser = await User.findOne({ where: { username: oldUsername } });
       updatedUser.set({
         username,
         email,
@@ -62,7 +62,7 @@ export class UserController {
     } catch (error) {
       return res
         .status(404)
-        .json({ message: `Username '${username}' not found` });
+        .json({ message: `Username '${oldUsername}' not found` });
     }
   };
 

@@ -146,11 +146,10 @@ describe("PUT /users/:username", () => {
     };
 
     let updatedUser = { ...newUser };
-    updatedUser.email = "axel@gmail.com";
+    updatedUser.username = "Axel2";
     updatedUser.credits = 100;
 
     let expectedUser = { ...updatedUser };
-    expectedUser.username = "Axel";
 
     await request(app)
       .post("/users" + "/Axel")

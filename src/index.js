@@ -14,7 +14,7 @@ const swaggerFile = require("./swagger_output.json");
 async function main() {
   // try {
   await sequelize.authenticate();
-  //await sequelize.sync({ force: true });
+  await sequelize.sync({ force: true });
 
   console.log("Connection to Databases established");
   // }

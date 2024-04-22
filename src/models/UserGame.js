@@ -14,5 +14,5 @@ export const UserGame = sequelize.define(
   { timestamps: false },
 );
 
-User.belongsToMany(Game, { through: UserGame, foreignKey: "username" });
+User.belongsToMany(Game, { through: UserGame, foreignKey: "username", sourceKey: "username" });
 Game.belongsToMany(User, { through: UserGame, foreignKey: "gamename" });
