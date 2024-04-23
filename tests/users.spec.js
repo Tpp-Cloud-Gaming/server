@@ -7,27 +7,25 @@ import { User } from "../src/models/User.js";
 import { Game } from "../src/models/Game.js";
 import { UserGame } from "../src/models/UserGame.js";
 
-
-
 beforeEach(async () => {
   await User.destroy({ where: {} });
   await Game.destroy({ where: {} });
   await UserGame.destroy({ where: {} });
 });
 
-  const app = createApp();
-              
-  describe("POST /users/:username", () => {
-    test("Should create user correctly", async () => {
-      const newUser = {
-        email: "hola@gmail.com",
-        longitude: 1.0,
-        latitude: 1.0,
-      };
-      let expectedUser = { ...newUser };
-      expectedUser.username = "Axel";
-      expectedUser.credits = 0;
-      const response = await request(app)
+const app = createApp();
+
+describe("POST /users/:username", () => {
+  test("Should create user correctly", async () => {
+    const newUser = {
+      email: "hola@gmail.com",
+      longitude: 1.0,
+      latitude: 1.0,
+    };
+    let expectedUser = { ...newUser };
+    expectedUser.username = "Axel";
+    expectedUser.credits = 0;
+    const response = await request(app)
       .post("/users" + "/Axel")
       .send(newUser);
     expect(response.statusCode).toBe(201);
@@ -51,10 +49,10 @@ beforeEach(async () => {
       .send(newUser);
     expect(response.statusCode).toBe(409);
   });
-  
+
   test("Should note create user without lat and lon", async () => {
     const newUser = {
-      email: "hola@gmail.com",      
+      email: "hola@gmail.com",
     };
     const response = await request(app)
       .post("/users" + "/Axel")
@@ -81,9 +79,12 @@ describe("GET /users/:username", () => {
     const response = await request(app).get("/users" + "/Axel");
 
     const expectedUserGames = [];
-    
+
     expect(response.statusCode).toBe(200);
-    expect(response.body).toEqual({user:expectedUser, userGames: expectedUserGames});
+    expect(response.body).toEqual({
+      user: expectedUser,
+      userGames: expectedUserGames,
+    });
   });
 
   test("Should get user with associated games", async () => {
@@ -100,27 +101,31 @@ describe("GET /users/:username", () => {
     await request(app)
       .post("/users" + "/Axel")
       .send(newUser);
-      
+
     const newGame = {
-        category: "rpg",
-        description: "El lol",
-      };
+      category: "rpg",
+      description: "El lol",
+    };
     await request(app)
       .post("/games" + "/league of legends")
       .send(newGame);
-      
-    const userGames = [{gamename: "league of legends", path: "c:/lol"}];
+
+    const userGames = [{ gamename: "league of legends", path: "c:/lol" }];
     await request(app)
       .post("/users" + "/Axel" + "/games")
       .send(userGames);
-      
-    const expectedUserGames = [{gamename: "league of legends", path: "c:/lol"}];                               
-      
+
+    const expectedUserGames = [
+      { gamename: "league of legends", path: "c:/lol" },
+    ];
+
     const response = await request(app).get("/users" + "/Axel");
     expect(response.statusCode).toBe(200);
-    expect(response.body).toEqual({user:expectedUser, userGames: expectedUserGames});
+    expect(response.body).toEqual({
+      user: expectedUser,
+      userGames: expectedUserGames,
+    });
   });
-
 
   test("Should not work with invalid username", async () => {
     const newUser = {

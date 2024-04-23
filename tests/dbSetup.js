@@ -15,7 +15,7 @@ export const startContainer = async () => {
       .withUsername(process.env.POSTGRES_USER)
       .withDatabase(process.env.POSTGRES_DB)
       .start();
-    
+
     await sequelize.sync({ force: true });
     console.log("Connection to Databases established");
   } catch (err) {
