@@ -27,4 +27,4 @@ RUN --mount=type=bind,source=package.json,target=package.json \
 USER root
 COPY . .
 
-CMD node src/ws.js
+CMD node src/index.js

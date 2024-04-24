@@ -36,11 +36,9 @@ export class UserController {
       });
       return res.status(201).json(newUser);
     } catch (error) {
-      return res
-        .status(409)
-        .json({
-          message: `Username '${username}' or email '${email}' already exists`,
-        });
+      return res.status(409).json({
+        message: `Username '${username}' or email '${email}' already exists`,
+      });
     }
   };
 
