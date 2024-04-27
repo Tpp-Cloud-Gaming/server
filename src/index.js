@@ -16,7 +16,7 @@ import swaggerUi from "swagger-ui-express";
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 const swaggerFile = require("./swagger_output.json");
-
+import { User } from "./models/User.js";
 async function main() {
   await sequelize.authenticate();
   await User.drop();
