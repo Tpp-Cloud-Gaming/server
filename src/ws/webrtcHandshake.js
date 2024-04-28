@@ -1,3 +1,5 @@
+import { UserGame } from "../models/UserGame.js";
+
 export async function initOfferer(ws, messageFields, connectedOfferers) {
   // initOfferer|usernameOfferer
   var usernameOfferer = messageFields[1];
@@ -17,9 +19,18 @@ export async function initClient(
   var gameName = messageFields[3];
   connectedClients[usernameClient] = ws;
 
+  // sdpRequestFrom|usernameClient|gameName|gamePath
   if (connectedOfferers[usernameOfferer]) {
+    const userGameInfo = await UserGame.findAll({
+      where: { username: usernameOfferer, gamename: gameName },
+      attributes: ["path"],
+    }).then((data) => {
+      return data.map((entity) => entity.get("path"));
+    });
+    const gamePath = userGameInfo[0];
+
     connectedOfferers[usernameOfferer].send(
-      `sdpRequestFrom|${usernameClient}|${gameName}`,
+      `sdpRequestFrom|${usernameClient}|${gameName}|${gamePath}`,
     );
   } else {
     ws.send("Offerer not found"); // TODO: definir un mensaje especifico
