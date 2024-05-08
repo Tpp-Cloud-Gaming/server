@@ -60,7 +60,7 @@ async function handleMessage(message, ws) {
   const messageType = messageFields[0];
   switch (messageType) {
     case "initOfferer":
-      initOfferer(ws, messageFields, connectedOfferers, connectedOfferers);
+      initOfferer(ws, messageFields, subscribers, connectedOfferers);
       break;
 
     case "initClient":
