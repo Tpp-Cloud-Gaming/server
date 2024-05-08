@@ -1,10 +1,17 @@
 import { UserGame } from "../models/UserGame.js";
+import { broadcastConnectionNotif } from "./subscriptionHandling.js";
 
-export async function initOfferer(ws, messageFields, connectedOfferers) {
+export async function initOfferer(
+  ws,
+  messageFields,
+  subscribers,
+  connectedOfferers,
+) {
   // initOfferer|usernameOfferer
   var usernameOfferer = messageFields[1];
   connectedOfferers[usernameOfferer] = ws;
   console.log("initOfferer with username: " + usernameOfferer);
+  broadcastConnectionNotif(subscribers, usernameOfferer);
 }
 
 export async function initClient(

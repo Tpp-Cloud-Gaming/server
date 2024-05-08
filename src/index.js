@@ -7,6 +7,7 @@ import {
   initClient,
 } from "./ws/webrtcHandshake.js";
 import { getUsersForGames } from "./ws/sessionHandling.js";
+import { addSubscription } from "./ws/subscriptionHandling.js";
 import { createApp } from "./app.js";
 import { sequelize } from "./database/database.js";
 import "./models/User.js";
@@ -40,6 +41,7 @@ httpServer.listen(PORT, () => {
 
 let connectedOfferers = {};
 let connectedClients = {};
+let subscribers = {};
 
 wss.on("connection", (ws) => {
   console.log("A new client connected.");
@@ -48,6 +50,7 @@ wss.on("connection", (ws) => {
   });
 
   ws.on("close", () => {
+    // TODO: Agregar handleo de desconexion
     console.log("A client disconnected.");
   });
 });
@@ -57,11 +60,11 @@ async function handleMessage(message, ws) {
   const messageType = messageFields[0];
   switch (messageType) {
     case "initOfferer":
-      initOfferer(ws, messageFields, connectedOfferers);
+      initOfferer(ws, messageFields, connectedOfferers, connectedOfferers);
       break;
 
     case "initClient":
-      initClient(ws, messageFields, connectedClients, connectedOfferers);
+      initClient(ws, messageFields, connectedClients);
       break;
 
     case "offererSdp":
@@ -70,6 +73,10 @@ async function handleMessage(message, ws) {
 
     case "clientSdp":
       clientSdp(ws, messageFields, connectedOfferers);
+      break;
+
+    case "subscribe":
+      addSubscription(ws, messageFields, subscribers, connectedOfferers);
       break;
 
     case "getUsersForGames":
