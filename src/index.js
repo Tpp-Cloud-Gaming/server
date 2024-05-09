@@ -64,7 +64,7 @@ async function handleMessage(message, ws) {
       break;
 
     case "initClient":
-      initClient(ws, messageFields, connectedClients);
+      initClient(ws, messageFields, connectedClients, connectedOfferers);
       break;
 
     case "offererSdp":
