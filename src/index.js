@@ -4,10 +4,10 @@ import {
   offererSdp,
   clientSdp,
   initOfferer,
+  disconnectOfferer,
   initClient,
-} from "./ws/webrtcHandshake.js";
-import { getUsersForGames } from "./ws/sessionHandling.js";
-import { addSubscription } from "./ws/subscriptionHandling.js";
+} from "./ws/routes/handshake.routes.js";
+import { addSubscription } from "./ws/routes/subscription.routes.js";
 import { createApp } from "./app.js";
 import { sequelize } from "./database/database.js";
 import "./models/User.js";
@@ -63,6 +63,10 @@ async function handleMessage(message, ws) {
       initOfferer(ws, messageFields, subscribers, connectedOfferers);
       break;
 
+    case "disconnectOfferer":
+      disconnectOfferer(ws, messageFields, subscribers, connectedOfferers);
+      break;
+
     case "initClient":
       initClient(ws, messageFields, connectedClients, connectedOfferers);
       break;
@@ -79,7 +83,5 @@ async function handleMessage(message, ws) {
       addSubscription(ws, messageFields, subscribers, connectedOfferers);
       break;
 
-    case "getUsersForGames":
-      getUsersForGames(ws, messageFields, connectedOfferers);
   }
 }

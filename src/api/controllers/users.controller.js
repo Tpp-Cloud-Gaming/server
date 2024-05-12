@@ -1,5 +1,5 @@
-import { User } from "../models/User.js";
-import { UserGame } from "../models/UserGame.js";
+import { User } from "../../models/User.js";
+import { UserGame } from "../../models/UserGame.js";
 
 export class UserController {
   constructor() {}

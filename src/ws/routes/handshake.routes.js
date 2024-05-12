@@ -1,5 +1,7 @@
-import { UserGame } from "../models/UserGame.js";
-import { broadcastConnectionNotif } from "./subscriptionHandling.js";
+import { broadcastConnectionNotif,broadcastDisconnectionNotif } from "./subscription.routes.js";
+import { UserController } from "../controllers/users.controller.js";
+
+const userController = new UserController();
 
 export async function initOfferer(
   ws,
@@ -12,6 +14,19 @@ export async function initOfferer(
   connectedOfferers[usernameOfferer] = ws;
   console.log("initOfferer with username: " + usernameOfferer);
   broadcastConnectionNotif(subscribers, usernameOfferer);
+}
+
+export async function disconnectOfferer(
+  ws,
+  messageFields,
+  subscribers,
+  connectedOfferers,
+) {
+  // disconnectOfferer|usernameOfferer
+  var usernameOfferer = messageFields[1];
+  console.log("disconnectOfferer with username: " + usernameOfferer);
+  delete connectedOfferers.usernameOfferer
+  broadcastDisconnectionNotif(subscribers, usernameOfferer);
 }
 
 export async function initClient(
@@ -28,13 +43,7 @@ export async function initClient(
 
   // sdpRequestFrom|usernameClient|gameName|gamePath
   if (connectedOfferers[usernameOfferer]) {
-    const userGameInfo = await UserGame.findAll({
-      where: { username: usernameOfferer, gamename: gameName },
-      attributes: ["path"],
-    }).then((data) => {
-      return data.map((entity) => entity.get("path"));
-    });
-    const gamePath = userGameInfo[0];
+    const gamePath = await userController.getGamePathForUser(usernameOfferer,gameName);
 
     connectedOfferers[usernameOfferer].send(
       `sdpRequestFrom|${usernameClient}|${gameName}|${gamePath}`,
