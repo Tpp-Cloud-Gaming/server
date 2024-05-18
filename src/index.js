@@ -8,6 +8,7 @@ import {
   initClient,
 } from "./ws/routes/handshake.routes.js";
 import { addSubscription } from "./ws/routes/subscription.routes.js";
+import { startSession, stopSession } from "./ws/routes/session.routes.js";
 import { createApp } from "./app.js";
 import { sequelize } from "./database/database.js";
 import "./models/User.js";
@@ -20,7 +21,7 @@ const swaggerFile = require("./swagger_output.json");
 
 async function main() {
   await sequelize.authenticate();
-  //await sequelize.sync({ force: true });
+  // await sequelize.sync({ force: true });
   console.log("Connection to Databases established");
 }
 
@@ -42,6 +43,7 @@ httpServer.listen(PORT, () => {
 let connectedOfferers = {};
 let connectedClients = {};
 let subscribers = {};
+let onGoingSessions = [];
 
 wss.on("connection", (ws) => {
   console.log("A new client connected.");
@@ -49,8 +51,23 @@ wss.on("connection", (ws) => {
     await handleMessage(message, ws);
   });
 
-  ws.on("close", () => {
+  ws.on("close",  (ws) => {
     // TODO: Agregar handleo de desconexion
+      // Delete the client from connectedClients
+    for (let [key, value] of Object.entries(connectedClients)) {
+      if (value === ws) {
+        delete connectedClients[key];
+        break;
+      }
+    }
+    // Delete the offerer from connectedOfferers
+    for (let [key, value] of Object.entries(connectedOfferers)) {
+      if (value === ws) {
+        delete connectedOfferers[key];
+        break;
+      }
+    }
+
     console.log("A client disconnected.");
   });
 });
@@ -82,6 +99,13 @@ async function handleMessage(message, ws) {
     case "subscribe":
       addSubscription(ws, messageFields, subscribers, connectedOfferers);
       break;
+    
+    case "startSession":
+      startSession(ws, messageFields, onGoingSessions, connectedClients, connectedOfferers);
+      break;
 
+    case "stopSession":
+      stopSession(ws, messageFields, onGoingSessions);
+      break;
   }
 }
