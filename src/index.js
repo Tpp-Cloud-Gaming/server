@@ -51,9 +51,9 @@ wss.on("connection", (ws) => {
     await handleMessage(message, ws);
   });
 
-  ws.on("close",  (ws) => {
+  ws.on("close", (ws) => {
     // TODO: Agregar handleo de desconexion
-      // Delete the client from connectedClients
+    // Delete the client from connectedClients
     for (let [key, value] of Object.entries(connectedClients)) {
       if (value === ws) {
         delete connectedClients[key];
@@ -99,9 +99,15 @@ async function handleMessage(message, ws) {
     case "subscribe":
       addSubscription(ws, messageFields, subscribers, connectedOfferers);
       break;
-    
+
     case "startSession":
-      startSession(ws, messageFields, onGoingSessions, connectedClients, connectedOfferers);
+      startSession(
+        ws,
+        messageFields,
+        onGoingSessions,
+        connectedClients,
+        connectedOfferers,
+      );
       break;
 
     case "stopSession":

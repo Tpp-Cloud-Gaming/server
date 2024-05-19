@@ -13,7 +13,7 @@ export class UserController {
     return gamesOffered;
   };
 
-  getGamePathForUser = async (usernameOfferer,gameName) => {
+  getGamePathForUser = async (usernameOfferer, gameName) => {
     const userGameInfo = await UserGame.findAll({
       where: { username: usernameOfferer, gamename: gameName },
       attributes: ["path"],
@@ -22,5 +22,5 @@ export class UserController {
     });
     const gamePath = userGameInfo[0];
     return gamePath;
-  }
+  };
 }

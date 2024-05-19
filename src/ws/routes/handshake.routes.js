@@ -1,4 +1,7 @@
-import { broadcastConnectionNotif,broadcastDisconnectionNotif } from "./subscription.routes.js";
+import {
+  broadcastConnectionNotif,
+  broadcastDisconnectionNotif,
+} from "./subscription.routes.js";
 import { UserController } from "../controllers/users.controller.js";
 
 const userController = new UserController();
@@ -25,7 +28,7 @@ export async function disconnectOfferer(
   // disconnectOfferer|usernameOfferer
   var usernameOfferer = messageFields[1];
   console.log("disconnectOfferer with username: " + usernameOfferer);
-  delete connectedOfferers.usernameOfferer
+  delete connectedOfferers.usernameOfferer;
   broadcastDisconnectionNotif(subscribers, usernameOfferer);
 }
 
@@ -43,7 +46,10 @@ export async function initClient(
 
   // sdpRequestFrom|usernameClient|gameName|gamePath
   if (connectedOfferers[usernameOfferer]) {
-    const gamePath = await userController.getGamePathForUser(usernameOfferer,gameName);
+    const gamePath = await userController.getGamePathForUser(
+      usernameOfferer,
+      gameName,
+    );
 
     connectedOfferers[usernameOfferer].send(
       `sdpRequestFrom|${usernameClient}|${gameName}|${gamePath}`,
