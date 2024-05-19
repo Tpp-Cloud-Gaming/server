@@ -52,18 +52,28 @@ wss.on("connection", (ws) => {
   });
 
   ws.on("close", (ws) => {
-    // TODO: Agregar handleo de desconexion
+    // TODO: Falta terminar sesiones, notificar desconexiones
     // Delete the client from connectedClients
     for (let [key, value] of Object.entries(connectedClients)) {
-      if (value === ws) {
+      if (value._closeCode === ws) {
         delete connectedClients[key];
+        console.log("Clients:", Object.keys(connectedClients));
         break;
       }
     }
     // Delete the offerer from connectedOfferers
     for (let [key, value] of Object.entries(connectedOfferers)) {
-      if (value === ws) {
+      if (value._closeCode === ws) {
         delete connectedOfferers[key];
+        console.log("Offerers:", Object.keys(connectedOfferers));
+        break;
+      }
+    }
+
+    for (let [key, value] of Object.entries(subscribers)) {
+      if (value._closeCode === ws) {
+        delete subscribers[key];
+        console.log("Subscribers:", Object.keys(subscribers));
         break;
       }
     }

@@ -28,7 +28,7 @@ export async function disconnectOfferer(
   // disconnectOfferer|usernameOfferer
   var usernameOfferer = messageFields[1];
   console.log("disconnectOfferer with username: " + usernameOfferer);
-  delete connectedOfferers.usernameOfferer;
+  delete connectedOfferers[usernameOfferer];
   broadcastDisconnectionNotif(subscribers, usernameOfferer);
 }
 
