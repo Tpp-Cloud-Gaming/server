@@ -128,3 +128,8 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+.DS_Store
+
+service-account-file.json
+thunder-collection_APIv1.json
