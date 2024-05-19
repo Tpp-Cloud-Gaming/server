@@ -23,7 +23,7 @@ export async function broadcastConnectionNotif(subscribers, usernameOfferer) {
 
   // Busca los juegos
   const games = await buildGamesAndQualification(usernameOfferer);
-  
+
   if (games !== "") {
     const message =
       `notifConnection|${usernameOfferer}|` + calificacion + games;
@@ -66,7 +66,7 @@ async function buildGamesAndQualification(usernameOfferer) {
   // Busca los juegos
   const gamesOffered =
     await userController.getGamesOfferedAndQualification(usernameOfferer);
-  
+
   let games = "";
 
   for (var i = 0; i < gamesOffered.length; i++) {
