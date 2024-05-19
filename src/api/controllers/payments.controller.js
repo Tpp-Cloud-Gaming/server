@@ -26,6 +26,11 @@ export class PaymentController {
             },
           ],
           purpose: "wallet_purchase",
+          back_urls: {
+            "success": "https://cloud-gaming-server.onrender.com/success",
+            "pending": "https://cloud-gaming-server.onrender.com/pending",
+            "failure": "https://cloud-gaming-server.onrender.com/success/failure"
+        },
           notification_url:
             "https://cloud-gaming-server.onrender.com" + "/payments/notif",
         },
@@ -41,4 +46,10 @@ export class PaymentController {
     console.log(req.body);
     console.log(req.query);
   };
+
+  logRecibido = async (req,res) => {
+    console.log(req.path);
+    console.log(req.body);
+    console.log(req.query);
+  }
 }

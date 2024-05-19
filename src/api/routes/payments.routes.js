@@ -21,5 +21,11 @@ export const createPaymentRouter = () => {
 
   router.get("/payments/notif", paymentController.receiveOrder);
 
+  router.get("/success", paymentController.logRecibido);
+
+  router.get("/pending", paymentController.logRecibido);
+
+  router.get("/failure", paymentController.logRecibido);
+
   return router;
 };
