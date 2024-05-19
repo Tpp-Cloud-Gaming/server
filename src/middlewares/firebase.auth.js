@@ -9,6 +9,11 @@ export const verifyFirebaseToken = async (req, res, next) => {
   if (process.env.NODE_ENV === "test") {
     return next();
   }
+
+  if (req.path === "/payments/notif") {
+    return next();
+  }
+
   const idToken = req.headers.authorization;
 
   if (!idToken) {
