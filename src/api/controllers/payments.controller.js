@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 const SELLERTOKEN =
   "TEST-2599259819337333-051517-a52d30e59d30fe3588aac4adfc7a71fa-1815436864";
 
+
 export class PaymentController {
   constructor() {}
 
@@ -44,8 +45,22 @@ export class PaymentController {
   };
 
   receiveOrder = async (req, res) => {
-    console.log(req.body);
-    console.log(req.query);
+    const {id, topic} = req.params;
+    console.log(id, topic);
+    const idempotencyKey = uuidv4().replace(/-/g, "").slice(0, 10);
+    const client = new MercadoPagoConfig({
+      accessToken: SELLERTOKEN,
+      options: { timeout: 5000, idempotencyKey: idempotencyKey },
+    });
+
+    const payment = new Payment(client);
+
+    payment.findById(id).then((response) => {
+      console.log(response);
+    });
+
+    // console.log(req.body);
+    // console.log(req.query);
   };
 
   logRecibido = async (req,res) => {
