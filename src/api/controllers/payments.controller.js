@@ -47,7 +47,6 @@ export class PaymentController {
   receiveOrder = async (req, res) => {
     const query = req.query;
     const id = query["data.id"];
-    console.log(id, topic);
     const idempotencyKey = uuidv4().replace(/-/g, "").slice(0, 10);
     const client = new MercadoPagoConfig({
       accessToken: SELLERTOKEN,
