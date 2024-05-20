@@ -1,4 +1,4 @@
-import { MercadoPagoConfig, Preference } from "mercadopago";
+import { MercadoPagoConfig, Preference, Payment } from "mercadopago";
 import { v4 as uuidv4 } from "uuid";
 const SELLERTOKEN =
   "TEST-2599259819337333-051517-a52d30e59d30fe3588aac4adfc7a71fa-1815436864";
