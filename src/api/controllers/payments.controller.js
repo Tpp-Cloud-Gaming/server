@@ -35,6 +35,7 @@ export class PaymentController {
             "https://cloud-gaming-server.onrender.com" + "/payments/notif",
         },
       });
+      console.log(p.sandbox_init_point);
       return res.status(201).json({ url: p.sandbox_init_point });
     } catch (error) {
       // TODO

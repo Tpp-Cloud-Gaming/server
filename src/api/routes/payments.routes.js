@@ -19,7 +19,7 @@ export const createPaymentRouter = () => {
     await paymentController.createOrder(req, res);
   });
 
-  router.get("/payments/notif", paymentController.receiveOrder);
+  router.post("/payments/notif", paymentController.receiveOrder);
 
   router.get("/success", paymentController.logRecibido);
 
