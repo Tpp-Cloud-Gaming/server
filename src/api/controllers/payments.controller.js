@@ -1,16 +1,17 @@
 import { MercadoPagoConfig, Preference, Payment } from "mercadopago";
 import { v4 as uuidv4 } from "uuid";
-const SELLERTOKEN =
-  "TEST-2599259819337333-051517-a52d30e59d30fe3588aac4adfc7a71fa-1815436864";
+import {User} from "../../models/User.js";
+import { subscribers } from "../../index.js";
 
 
 export class PaymentController {
   constructor() {}
 
+  
   createOrder = async (req, res) => {
     const idempotencyKey = uuidv4().replace(/-/g, "").slice(0, 10);
     const client = new MercadoPagoConfig({
-      accessToken: SELLERTOKEN,
+      accessToken: proccess.env.SELLERTOKEN,
       options: { timeout: 5000, idempotencyKey: idempotencyKey },
     });
 
@@ -44,12 +45,12 @@ export class PaymentController {
     }
   };
 
-  receiveOrder = async (req, res) => {
+  receiveOrder = async (req, res) => {    
     const query = req.query;
     const id = query["data.id"];
     const idempotencyKey = uuidv4().replace(/-/g, "").slice(0, 10);
     const client = new MercadoPagoConfig({
-      accessToken: SELLERTOKEN,
+      accessToken: process.env.SELLERTOKEN,
       options: { timeout: 5000, idempotencyKey: idempotencyKey },
     });
 
@@ -57,10 +58,30 @@ export class PaymentController {
 
     payment.get({
       id: id,
-    }).then(r => {
-        console.log(r.payer.email);
+    })
+    .then(async r => {
+      const email = r.payer.email;
+      const quantity = r.additional_info.items[0].quantity;
+      
+      console.log(r.payer.email);
+      console.log(r.additional_info.items[0].quantity);
+
+      const minutes = quantity * 60;
+      
+      const user =  User.findOne({where: {mercadopago_mail: email}});
+      if(!user){
+        console.log("User not found with mercadopago email provided");
+        return;
+      }
+      user.set({credits: minutes});
+      await user.save();
+      subscribers.sendPaymentNotification(user.username);
 
     })
+    .catch(error => {
+      console.error("Error occurred:", error);
+      // Handle the error appropriately here
+    });
   };
 
   logRecibido = async (req,res) => {

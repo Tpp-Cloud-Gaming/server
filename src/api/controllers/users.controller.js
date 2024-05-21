@@ -1,3 +1,4 @@
+import { where } from "sequelize";
 import { User } from "../../models/User.js";
 import { UserGame } from "../../models/UserGame.js";
 
@@ -42,9 +43,10 @@ export class UserController {
     }
   };
 
+  
   updateUser = async (req, res) => {
     const oldUsername = req.params.username;
-    const { username, email, credits, longitude, latitude } = req.body;
+    const { username, email, credits, longitude, latitude} = req.body;
     try {
       const updatedUser = await User.findOne({
         where: { username: oldUsername },
@@ -93,4 +95,26 @@ export class UserController {
         .json({ message: `Username or gamename does not exist` });
     }
   };
+
+  updateMercadopagoEmail = async (req, res) => {
+    const username = req.params.username;
+    const { mercadopago_mail } = req.body;
+    try {
+      const updatedUser = await User.findOne({
+        where: { username: username },
+      });
+      updatedUser.set({
+        mercadopago_mail,
+      });
+      await updatedUser.save();
+      return res.status(200).json(updatedUser);
+    } catch (error) {
+      return res
+        .status(404)
+        .json({ message: `Username '${username}' not found` });
+    } 
+
+
+  }
+
 }

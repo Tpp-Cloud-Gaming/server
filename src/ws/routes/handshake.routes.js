@@ -1,8 +1,9 @@
-import {
-  broadcastConnectionNotif,
-  broadcastDisconnectionNotif,
-} from "./subscription.routes.js";
+// import {
+//   broadcastConnectionNotif,
+//   broadcastDisconnectionNotif,
+// } from "./subscription.routes.js";
 import { UserController } from "../controllers/users.controller.js";
+
 
 const userController = new UserController();
 
@@ -16,11 +17,11 @@ export async function initOfferer(
   var usernameOfferer = messageFields[1];
   connectedOfferers[usernameOfferer] = ws;
   console.log("initOfferer with username: " + usernameOfferer);
-  broadcastConnectionNotif(subscribers, usernameOfferer);
+  subscribers.broadcastConnectionNotif(usernameOfferer);
+  //broadcastConnectionNotif(subscribers, usernameOfferer);
 }
 
 export async function disconnectOfferer(
-  ws,
   messageFields,
   subscribers,
   connectedOfferers,
@@ -29,7 +30,8 @@ export async function disconnectOfferer(
   var usernameOfferer = messageFields[1];
   console.log("disconnectOfferer with username: " + usernameOfferer);
   delete connectedOfferers[usernameOfferer];
-  broadcastDisconnectionNotif(subscribers, usernameOfferer);
+  subscribers.broadcastDisconnectionNotif(usernameOfferer);
+  // broadcastDisconnectionNotif(subscribers, usernameOfferer);
 }
 
 export async function initClient(

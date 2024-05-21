@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../database/database.js";
 
-export const User = sequelize.define(
+export const User = sequelize.define( 
   "users",
   {
     email: {
@@ -21,6 +21,10 @@ export const User = sequelize.define(
     },
     latitude: {
       type: DataTypes.FLOAT,
+    },
+    mercadopago_mail: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
   },
   { timestamps: false },
