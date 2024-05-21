@@ -11,7 +11,7 @@ export class PaymentController {
   createOrder = async (req, res) => {
     const idempotencyKey = uuidv4().replace(/-/g, "").slice(0, 10);
     const client = new MercadoPagoConfig({
-      accessToken: proccess.env.SELLERTOKEN,
+      accessToken: process.env.SELLERTOKEN,
       options: { timeout: 5000, idempotencyKey: idempotencyKey },
     });
 
