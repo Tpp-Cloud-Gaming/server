@@ -68,7 +68,7 @@ export class PaymentController {
 
       const minutes = quantity * 60;
       
-      const user =  User.findOne({where: {mercadopago_mail: email}});
+      const user =  await User.findOne({where: {mercadopago_mail: email}});
       if(!user){
         console.log("User not found with mercadopago email provided");
         return;
