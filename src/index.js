@@ -75,13 +75,13 @@ wss.on("connection", (ws) => {
     }
 
 
-    for (let [key, value] of Object.entries(subscribers)) {
-      if (value._closeCode === ws) {
-        subscribers.deleteSubscriber(key);        
-        // console.log("Subscribers:", Object.keys(subscribers));
-        break;
-      }
-    }
+    //for (let [key, value] of Object.entries(subscribers)) {
+    //  if (value._closeCode === ws) {
+    //    subscribers.deleteSubscriber(key);        
+    //    // console.log("Subscribers:", Object.keys(subscribers));
+    //    break;
+    //  }
+    //}
 
     console.log("A client disconnected.");
   });
