@@ -72,8 +72,19 @@ wss.on("connection", (ws) => {
       }
     }
 
+<<<<<<< HEAD
     // Lo borra si era suscriptor
     await subscribers.removeSubscriber(ws);
+=======
+
+    //for (let [key, value] of Object.entries(subscribers)) {
+    //  if (value._closeCode === ws) {
+    //    subscribers.deleteSubscriber(key);        
+    //    // console.log("Subscribers:", Object.keys(subscribers));
+    //    break;
+    //  }
+    //}
+>>>>>>> 76018ce (Update index.js)
 
     console.log("A client disconnected.");
   });
