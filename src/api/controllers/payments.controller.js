@@ -51,6 +51,7 @@ export class PaymentController {
     const id = query["data.id"];
     const topic = query["topic"];
     if (topic !== "payment") {
+      console.log("Topic", topic);
       return res.status(200).send("ok");
     }
 
