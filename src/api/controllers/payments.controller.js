@@ -26,6 +26,7 @@ export class PaymentController {
               title: "Cloud Gaming",
               quantity: quantity,
               unit_price: 100,
+              id: "12asd34",
             },
           ],
           purpose: "wallet_purchase",
@@ -51,11 +52,11 @@ export class PaymentController {
     const id = query["data.id"];
     const type = query["type"];
     const topic = query["topic"];
-    console.log("Query", req.query);
     if ((type !== "payment" && !topic) || (topic !== "payment" && !type)) {
       return res.status(200).send("ok");
     }
-
+    console.log("Query", req.query);
+    
     const idempotencyKey = uuidv4().replace(/-/g, "").slice(0, 10);
     const client = new MercadoPagoConfig({
       accessToken: process.env.SELLERTOKEN,
@@ -74,6 +75,7 @@ export class PaymentController {
       
       console.log(r.payer.email);
       console.log(r.additional_info.items[0].quantity);
+      console.log(r.additional_info.items[0].id);
 
       const minutes = quantity * 60;
       console.log("Email a comparar: ",email);
