@@ -7,8 +7,7 @@ import {
   disconnectOfferer,
   initClient,
 } from "./ws/routes/handshake.routes.js";
-// import { addSubscription } from "./ws/routes/subscription.routes.js";
-import {Subscribers} from "./ws/controllers/subscribers.controller.js";
+import {subscriberController} from "./ws/controllers/subscribers.controller.js";
 import { startSession, stopSession } from "./ws/routes/session.routes.js";
 import { createApp } from "./app.js";
 import { sequelize } from "./database/database.js";
@@ -43,9 +42,8 @@ httpServer.listen(PORT, () => {
 
 let connectedOfferers = {};
 let connectedClients = {};
-// let subscribers = {};
+let subscribers = subscriberController;
 let onGoingSessions = [];
-export const  subscribers = new Subscribers();
 
 
 wss.on("connection", (ws) => {
@@ -54,7 +52,7 @@ wss.on("connection", (ws) => {
     await handleMessage(message, ws);
   });
 
-  ws.on("close", (ws) => {
+  ws.on("close", async (ws) => {
     // TODO: Falta terminar sesiones
     // Delete the client from connectedClients
     for (let [key, value] of Object.entries(connectedClients)) {
@@ -68,20 +66,14 @@ wss.on("connection", (ws) => {
     for (let [key, value] of Object.entries(connectedOfferers)) {
       if (value._closeCode === ws) {
         delete connectedOfferers[key];
-        subscribers.broadcastDisconnectionNotif(key);
+        await subscribers.broadcastDisconnectionNotif(key);
         console.log("Offerers:", Object.keys(connectedOfferers));
         break;
       }
     }
 
-
-    for (let [key, value] of Object.entries(subscribers)) {
-      if (value._closeCode === ws) {
-        subscribers.deleteSubscriber(key);        
-        // console.log("Subscribers:", Object.keys(subscribers));
-        break;
-      }
-    }
+    // Lo borra si era suscriptor
+    await subscribers.removeSubscriber(ws);
 
     console.log("A client disconnected.");
   });

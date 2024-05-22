@@ -1,19 +1,19 @@
 import { UserController } from "../controllers/users.controller.js";
+import { subscribers } from "../../models/Subscriber.js";
 const userController = new UserController();
 
-export class Subscribers {
+export class SubscriberController {
     constructor() {
-        this.subscribers = {};
+        this.subscribers = subscribers;
     }
 
     addSubscriber(usernameSubscriber, ws, connectedOfferers) {
-        this.subscribers[usernameSubscriber] = ws;
-        console.log("subscriber with username: " + usernameSubscriber);
+        this.subscribers.addSubscriber(usernameSubscriber,ws);
         this.sendOldConnectionNotif(connectedOfferers, usernameSubscriber);
     }
 
     deleteSubscriber(usernameSubscriber) {
-        delete this.subscribers[usernameSubscriber];
+        this.subscribers.deleteSubscriber(usernameSubscriber);
     }
 
     async sendOldConnectionNotif(connectedOfferers, usernameSubscriber) {
@@ -23,7 +23,7 @@ export class Subscribers {
             if (games !== "") {
                 const message = `notifConnection|${offerer}|` + calificacion + games;
                 console.log("msg", message);
-                this.subscribers[usernameSubscriber].send(message);
+                this.subscribers.getSubscriber(usernameSubscriber).send(message);
             }
         }
     }
@@ -46,30 +46,31 @@ export class Subscribers {
 
 
     async broadcastMessage(message) {
-        for (let subscriber in this.subscribers) {
+        
+        for (let [subscriber,ws] of Object.entries(this.subscribers.getAllSubscribers())) {
             console.log("sending message to", subscriber);
-            this.subscribers[subscriber].send(message);
+            ws.send(message);
         }
     }
 
     async sendPaymentNotification(usernameSubscriber) {
         const message = `notifPayment|${usernameSubscriber}`;
-        if (!this.subscribers[usernameSubscriber]) {
+        if (!this.subscribers.getSubscriber(usernameSubscriber)) {
             console.log("Subscriber not found");
             return;
         }
         
-        this.subscribers[usernameSubscriber].send(message);
+        this.subscribers.getSubscriber(usernameSubscriber).send(message);
     }
 
     async removeSubscriber(ws) {
-        for (let [key, value] of Object.entries(this.subscribers)) {
+        for (let [subscriber,value] of Object.entries(this.subscribers.getAllSubscribers())) {
             if (value._closeCode === ws) {
-              delete subscribers[key];
-            console.log("Subscribers:", Object.keys(subscribers));
-              break;
+                this.subscribers.deleteSubscriber(subscriber);
+                console.log("Subscribers:", Object.keys(subscribers));
+                break;
             }
-          }
+        }
     }
 
 }
@@ -87,4 +88,6 @@ async function buildGamesAndQualification(usernameOfferer) {
     }
   
     return games;
-  }
+}
+
+export const subscriberController = new SubscriberController();
