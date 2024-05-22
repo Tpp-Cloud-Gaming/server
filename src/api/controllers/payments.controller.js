@@ -49,6 +49,11 @@ export class PaymentController {
   receiveOrder = async (req, res) => {    
     const query = req.query;
     const id = query["data.id"];
+    const topic = query["topic"];
+    if (topic !== "payment") {
+      return res.status(200).send("ok");
+    }
+
     const idempotencyKey = uuidv4().replace(/-/g, "").slice(0, 10);
     const client = new MercadoPagoConfig({
       accessToken: process.env.SELLERTOKEN,
@@ -61,6 +66,7 @@ export class PaymentController {
       id: id,
     })
     .then(async r => {
+      console.log("R: ", r);
       const email = r.payer.email;
       const quantity = r.additional_info.items[0].quantity;
       
@@ -77,7 +83,7 @@ export class PaymentController {
       user.set({credits: minutes});
       await user.save();
       subscribers.sendPaymentNotification(user.username);
-
+      return res.status(200).send("ok");
     })
     .catch(error => {
       console.error("Error occurred:", error);
