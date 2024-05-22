@@ -1,8 +1,9 @@
 import { MercadoPagoConfig, Preference, Payment } from "mercadopago";
 import { v4 as uuidv4 } from "uuid";
 import {User} from "../../models/User.js";
-import { subscribers } from "../../index.js";
+import { subscriberController } from "../../ws/controllers/subscribers.controller.js";
 
+const subscribers = subscriberController;
 
 export class PaymentController {
   constructor() {}
@@ -67,8 +68,8 @@ export class PaymentController {
       console.log(r.additional_info.items[0].quantity);
 
       const minutes = quantity * 60;
-      
-      const user =  User.findOne({where: {mercadopago_mail: email}});
+      console.log("Email a comparar: ",email);
+      const user =  await User.findOne({where: {mercadopago_mail: email}});
       if(!user){
         console.log("User not found with mercadopago email provided");
         return;

@@ -25,6 +25,7 @@ describe("POST /users/:username", () => {
     let expectedUser = { ...newUser };
     expectedUser.username = "Axel";
     expectedUser.credits = 0;
+    expectedUser.mercadopago_mail = null;
     const response = await request(app)
       .post("/users" + "/Axel")
       .send(newUser);
@@ -73,6 +74,7 @@ describe("GET /users/:username", () => {
     expectedUser.credits = 0;
     expectedUser.latitude = 1.0;
     expectedUser.longitude = 1.0;
+    expectedUser.mercadopago_mail = null;
     await request(app)
       .post("/users" + "/Axel")
       .send(newUser);
@@ -98,6 +100,7 @@ describe("GET /users/:username", () => {
     expectedUser.credits = 0;
     expectedUser.latitude = 1.0;
     expectedUser.longitude = 1.0;
+    expectedUser.mercadopago_mail = null;
     await request(app)
       .post("/users" + "/Axel")
       .send(newUser);
@@ -155,6 +158,8 @@ describe("PUT /users/:username", () => {
     updatedUser.credits = 100;
 
     let expectedUser = { ...updatedUser };
+    expectedUser.mercadopago_mail = null;
+
 
     await request(app)
       .post("/users" + "/Axel")
