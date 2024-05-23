@@ -24,7 +24,7 @@ import { Payment } from "./models/Payments.js";
 
 async function main() {
   await sequelize.authenticate();
-  Payment.sync({ force: true })
+  // Payment.sync({ force: true })
   // User.sync({ force: true })
   // await sequelize.sync({ force: true });
   console.log("Connection to Databases established");
