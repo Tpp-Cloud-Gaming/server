@@ -11,7 +11,7 @@ export class PaymentController {
 
 
   createOrder = async (req, res) => {
-    const username = req.params.username;
+    const username = req.body.username;
     console.log("Username: ", username);
 
     const user = await User.findOne({ where: { username: username } });

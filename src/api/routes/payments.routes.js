@@ -2,20 +2,20 @@ import { Router } from "express";
 import { PaymentController } from "../controllers/payments.controller.js";
 import { param, body, validationResult } from "express-validator";
 
-// const validatePaymentRequestBody = [
-//   param("username").notEmpty().isString().withMessage("Username is required").bail(),
-//   body("hours").notEmpty().withMessage("Hours is required").bail(),
-// ];
+const validatePaymentRequestBody = [
+  body("hours").notEmpty().withMessage("Hours is required").bail(),
+  body("username").notEmpty().withMessage("Username is required").bail(),
+];
 
 export const createPaymentRouter = () => {
   const router = Router();
   const paymentController = new PaymentController();
 
-  router.post("/payments/:username", async (req, res) => {
-    // const errors = validationResult(req);
-    // if (!errors.isEmpty()) {
-    //   return res.status(400).json({ errors: errors.array() });
-    // }
+  router.post("/payments", validatePaymentRequestBody, async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
 
     await paymentController.createOrder(req, res);
   });
