@@ -1,10 +1,10 @@
 import { Router } from "express";
 import { PaymentController } from "../controllers/payments.controller.js";
-import {param, body, validationResult } from "express-validator";
+import { param, body, validationResult } from "express-validator";
 
 const validatePaymentRequestBody = [
   param("username").notEmpty().withMessage("Username is required").bail(),
-  body("hours").notEmpty().withMessage("Category is required").bail(),
+  body("hours").notEmpty().withMessage("Hours is required").bail(),
 ];
 
 export const createPaymentRouter = () => {
