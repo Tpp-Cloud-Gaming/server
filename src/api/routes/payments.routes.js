@@ -3,7 +3,7 @@ import { PaymentController } from "../controllers/payments.controller.js";
 import { param, body, validationResult } from "express-validator";
 
 const validatePaymentRequestBody = [
-  param("username").notEmpty().withMessage("Username is required").bail(),
+  param("username").notEmpty().isString().withMessage("Username is required").bail(),
   body("hours").notEmpty().withMessage("Hours is required").bail(),
 ];
 
