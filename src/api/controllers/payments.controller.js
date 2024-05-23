@@ -68,10 +68,11 @@ export class PaymentController {
     const type = query["type"];
     const topic = query["topic"];
 
+    console.log(`Topic: ${topic} y Type: ${type}`);
+
     if ((type !== "payment" && !topic) || (topic !== "payment" && !type)) {
       return res.status(200).send("ok");
     }
-    // console.log("Query", req.query);
 
     const idempotencyKey = uuidv4().replace(/-/g, "").slice(0, 10);
     const client = new MercadoPagoConfig({
