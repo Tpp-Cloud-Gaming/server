@@ -4,7 +4,6 @@ import {User} from "../../models/User.js";
 import { Payment } from "../../models/Payments.js";
 import { subscriberController } from "../../ws/controllers/subscribers.controller.js";
 
-
 const subscribers = subscriberController;
 
 export class PaymentController {
@@ -39,6 +38,7 @@ export class PaymentController {
               quantity: quantity,
               unit_price: 100,
               id: orderId,
+
             },
           ],
           purpose: "wallet_purchase",
@@ -105,13 +105,12 @@ export class PaymentController {
       await payment.save();
       user.set({credits: minutes});
       await user.save();
-      
+  
       subscribers.sendPaymentNotification(user.username);
       return res.status(200).send("ok");
     })
     .catch(error => {
-      console.error("Error occurred:", error);
-      // Handle the error appropriately here
+      console.error("Error occurred:", error);      
     });
   };
 
