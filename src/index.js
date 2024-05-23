@@ -14,13 +14,18 @@ import { sequelize } from "./database/database.js";
 import "./models/User.js";
 import "./models/Game.js";
 import "./models/UserGame.js";
+import "./models/Payments.js"
 import swaggerUi from "swagger-ui-express";
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 const swaggerFile = require("./swagger_output.json");
+import { Payment } from "./models/Payments.js";
+// import { User } from "./models/User.js";
 
 async function main() {
   await sequelize.authenticate();
+  Payment.sync({ force: true })
+  // User.sync({ force: true })
   // await sequelize.sync({ force: true });
   console.log("Connection to Databases established");
 }

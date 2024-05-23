@@ -1,7 +1,9 @@
-import { MercadoPagoConfig, Preference, Payment } from "mercadopago";
+import { MercadoPagoConfig, Preference } from "mercadopago";
 import { v4 as uuidv4 } from "uuid";
 import {User} from "../../models/User.js";
+import { Payment } from "../../models/Payments.js";
 import { subscriberController } from "../../ws/controllers/subscribers.controller.js";
+
 
 const subscribers = subscriberController;
 
@@ -10,6 +12,16 @@ export class PaymentController {
 
   
   createOrder = async (req, res) => {
+    const username = req.params;
+    
+    const user = await User.findOne({where: {username: username}});
+    if(!user){
+      return res.status(404).json({message: "User not found"});
+    }
+    const payment = await Payment.create({username: user.username});
+    const orderId = payment.order_id;
+    console.log("Order id: ", orderId);
+
     const idempotencyKey = uuidv4().replace(/-/g, "").slice(0, 10);
     const client = new MercadoPagoConfig({
       accessToken: process.env.SELLERTOKEN,
@@ -26,7 +38,7 @@ export class PaymentController {
               title: "Cloud Gaming",
               quantity: quantity,
               unit_price: 100,
-              id: "12asd34",
+              id: orderId,
             },
           ],
           purpose: "wallet_purchase",
@@ -41,8 +53,10 @@ export class PaymentController {
       });
       console.log(p.sandbox_init_point);
       return res.status(201).json({ url: p.sandbox_init_point });
-    } catch (error) {
-      // TODO
+
+    } catch (error) {      
+      
+      payment.destroy();
       return res.status(500);
     }
   };
@@ -52,10 +66,11 @@ export class PaymentController {
     const id = query["data.id"];
     const type = query["type"];
     const topic = query["topic"];
+    
     if ((type !== "payment" && !topic) || (topic !== "payment" && !type)) {
       return res.status(200).send("ok");
     }
-    console.log("Query", req.query);
+    // console.log("Query", req.query);
     
     const idempotencyKey = uuidv4().replace(/-/g, "").slice(0, 10);
     const client = new MercadoPagoConfig({
@@ -63,29 +78,34 @@ export class PaymentController {
       options: { timeout: 5000, idempotencyKey: idempotencyKey },
     });
 
-    const payment = new Payment(client);
-
+  
     payment.get({
       id: id,
     })
     .then(async r => {
-      console.log("R: ", r);
-      const email = r.payer.email;
-      const quantity = r.additional_info.items[0].quantity;
-      
-      console.log(r.payer.email);
-      console.log(r.additional_info.items[0].quantity);
-      console.log(r.additional_info.items[0].id);
-
-      const minutes = quantity * 60;
-      console.log("Email a comparar: ",email);
-      const user =  await User.findOne({where: {mercadopago_mail: email}});
-      if(!user){
-        console.log("User not found with mercadopago email provided");
+  
+      const  id = r.additional_info.items[0].id;
+      console.log("Payment received with order id: ", id);
+      const payment = await Payment.findOne({where: {order_id: id}});
+      if(!payment){
+        console.log("Payment not found with order id provided");
         return;
       }
+      const quantity = r.additional_info.items[0].quantity;
+      const minutes = quantity * 60;
+      
+      const user =  await User.findOne({where: {username: payment.username}});
+      
+      if(!user){
+        console.log("User not found");
+        return;
+      }
+      
+      payment.set({status: "approved"});
+      await payment.save();
       user.set({credits: minutes});
       await user.save();
+      
       subscribers.sendPaymentNotification(user.username);
       return res.status(200).send("ok");
     })
@@ -100,4 +120,6 @@ export class PaymentController {
     console.log(req.body);
     console.log(req.query);
   }
+
+
 }
