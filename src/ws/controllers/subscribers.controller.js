@@ -30,6 +30,7 @@ export class SubscriberController {
 
     async broadcastConnectionNotif(usernameOfferer) {
         const calificacion = "5";
+        console.log("broadcasting connection notif", usernameOfferer);
         const games = await buildGamesAndQualification(usernameOfferer);
         if (games !== "") {
             const message =
@@ -53,8 +54,8 @@ export class SubscriberController {
         }
     }
 
-    async sendPaymentNotification(usernameSubscriber) {
-        const message = `notifPayment|${usernameSubscriber}`;
+    async sendPaymentNotification(usernameSubscriber, quantity) {
+        const message = `notifPayment|${usernameSubscriber}|${quantity}`;
         if (!this.subscribers.getSubscriber(usernameSubscriber)) {
             console.log("Subscriber not found");
             return;

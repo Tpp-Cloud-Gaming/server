@@ -106,7 +106,7 @@ export class PaymentController {
       user.set({credits: minutes});
       await user.save();
   
-      subscribers.sendPaymentNotification(user.username);
+      subscribers.sendPaymentNotification(user.username, quantity);
       return res.status(200).send("ok");
     })
     .catch(error => {
