@@ -1,4 +1,4 @@
-import { MercadoPagoConfig, Preference } from "mercadopago";
+import { MercadoPagoConfig, Preference, Payment } from "mercadopago";
 import { v4 as uuidv4 } from "uuid";
 import { User } from "../../models/User.js";
 import { Payment } from "../../models/Payments.js";
@@ -80,6 +80,8 @@ export class PaymentController {
       options: { timeout: 5000, idempotencyKey: idempotencyKey },
     });
 
+
+    const payment = new Payment(client);
 
     payment.get({
       id: id,
