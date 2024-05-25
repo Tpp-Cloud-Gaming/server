@@ -19,13 +19,8 @@ import swaggerUi from "swagger-ui-express";
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 const swaggerFile = require("./swagger_output.json");
-import { Payment } from "./models/Payments.js";
-// import { User } from "./models/User.js";
-
 async function main() {
   await sequelize.authenticate();
-  // Payment.sync({ force: true })
-  // User.sync({ force: true })
   // await sequelize.sync({ force: true });
   console.log("Connection to Databases established");
 }
@@ -39,6 +34,7 @@ app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 const PORT = process.env.PORT || 3000;
 const httpServer = createServer();
 const wss = new WebSocketServer({ server: httpServer });
+const CLOSEDSTATE = 3;
 
 httpServer.on("request", app);
 httpServer.listen(PORT, () => {
@@ -56,29 +52,30 @@ wss.on("connection", (ws) => {
   ws.on("message", async (message) => {
     await handleMessage(message, ws);
   });
-
-  ws.on("close", async (ws) => {
+  
+  ws.on("close", async (ws) => {    
     // TODO: Falta terminar sesiones
     // Delete the client from connectedClients
     for (let [key, value] of Object.entries(connectedClients)) {
-      if (value._closeCode === ws) {
+      if (value._readyState === CLOSEDSTATE) {
         delete connectedClients[key];
-        console.log("Clients:", Object.keys(connectedClients));
+        console.log("Clients left:", Object.keys(connectedClients));
         break;
       }
     }
     // Delete the offerer from connectedOfferers
     for (let [key, value] of Object.entries(connectedOfferers)) {
-      if (value._closeCode === ws) {
+      if (value._readyState === CLOSEDSTATE) {
         delete connectedOfferers[key];
         await subscribers.broadcastDisconnectionNotif(key);
-        console.log("Offerers:", Object.keys(connectedOfferers));
+        console.log("Offerers left:", Object.keys(connectedOfferers));
         break;
       }
     }
-
-    // Lo borra si era suscriptor
+    
     await subscribers.removeSubscriber(ws);
+    // Lo borra si era suscriptor
+    // await subscribers.removeSubscriber(ws);
 
     console.log("A client disconnected.");
   });

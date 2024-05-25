@@ -1,14 +1,14 @@
 import { UserController } from "../controllers/users.controller.js";
 import { subscribers } from "../../models/Subscriber.js";
 const userController = new UserController();
-
+const CLOSEDSTATE = 3;
 export class SubscriberController {
     constructor() {
         this.subscribers = subscribers;
     }
 
     addSubscriber(usernameSubscriber, ws, connectedOfferers) {
-        this.subscribers.addSubscriber(usernameSubscriber,ws);
+        this.subscribers.addSubscriber(usernameSubscriber,ws);        
         this.sendOldConnectionNotif(connectedOfferers, usernameSubscriber);
     }
 
@@ -21,16 +21,14 @@ export class SubscriberController {
         for (let offerer in connectedOfferers) {
             const games = await buildGamesAndQualification(offerer);
             if (games !== "") {
-                const message = `notifConnection|${offerer}|` + calificacion + games;
-                console.log("msg", message);
+                const message = `notifConnection|${offerer}|` + calificacion + games;                
                 this.subscribers.getSubscriber(usernameSubscriber).send(message);
             }
         }
     }
 
     async broadcastConnectionNotif(usernameOfferer) {
-        const calificacion = "5";
-        console.log("broadcasting connection notif", usernameOfferer);
+        const calificacion = "5";        
         const games = await buildGamesAndQualification(usernameOfferer);
         if (games !== "") {
             const message =
@@ -47,8 +45,8 @@ export class SubscriberController {
 
 
     async broadcastMessage(message) {
-        
-        for (let [subscriber,ws] of Object.entries(this.subscribers.getAllSubscribers())) {
+        console.log("Broadcasting message", message);
+        for (let [subscriber,ws] of Object.entries(this.subscribers.getAllSubscribers())) {                                    
             console.log("sending message to", subscriber);
             ws.send(message);
         }
@@ -64,11 +62,12 @@ export class SubscriberController {
         this.subscribers.getSubscriber(usernameSubscriber).send(message);
     }
 
-    async removeSubscriber(ws) {
-        for (let [subscriber,value] of Object.entries(this.subscribers.getAllSubscribers())) {
-            if (value._closeCode === ws) {
+    
+
+    async removeSubscriber(ws) {        
+        for (let [subscriber,value] of Object.entries(this.subscribers.getAllSubscribers())) {            
+            if (value._readyState === CLOSEDSTATE) {
                 this.subscribers.deleteSubscriber(subscriber);
-                console.log("Subscribers:", Object.keys(subscribers));
                 break;
             }
         }

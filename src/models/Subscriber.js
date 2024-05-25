@@ -7,7 +7,10 @@ class Subscribers {
 
     addSubscriber(usernameSubscriber, ws) {
         this.subscribers[usernameSubscriber] = ws;
-        console.log("subscriber with username: " + usernameSubscriber);
+        console.log("New subscriber with username: " + usernameSubscriber);
+        console.log("Actual subscribers", Object.keys(this.subscribers));
+        // console.log("Suscribers", this.subscribers);
+
     }
 
     deleteSubscriber(usernameSubscriber) {
