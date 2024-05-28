@@ -107,7 +107,8 @@ export class PaymentController {
 
         payment.set({ status: "approved" });
         await payment.save();
-        user.set({ credits: minutes });
+        let new_credits = user.credits + minutes;
+        user.set({ credits: new_credits });
         await user.save();
 
         subscribers.sendPaymentNotification(user.username, quantity);
