@@ -15,6 +15,8 @@ export class UserController {
       where: { username: username },
       attributes: ["path", "gamename"],
     });
+    
+    user.credits = user.credits / 60;
 
     if (user === null) {
       return res
