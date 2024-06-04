@@ -62,6 +62,17 @@ export class SubscriberController {
         this.subscribers.getSubscriber(usernameSubscriber).send(message);
     }
 
+
+    async sendEndSessionNotification(usernameSubscriber) {
+        const message = `notifEndSession`;
+        if (!this.subscribers.getSubscriber(usernameSubscriber)) {
+            console.log("Subscriber not found");
+            return;
+        }
+        
+        this.subscribers.getSubscriber(usernameSubscriber).send(message);
+    }
+
     
 
     async removeSubscriber(ws) {        

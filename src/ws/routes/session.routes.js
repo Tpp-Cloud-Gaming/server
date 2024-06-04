@@ -7,18 +7,20 @@ export async function startSession(
   connectedClients,
   connectedOfferers,
 ) {
-  var offerer = connectedOfferers[messageFields[1]];
-  var client = connectedClients[messageFields[2]];
-
-  if (!offerer) {
+  
+  if (!connectedOfferers[messageFields[1]]) {
     ws.send("Offerer not found.");
     return;
   }
+  
+    if (!connectedClients[messageFields[2]]) {
+      ws.send("Client not found.");
+      return;
+    }
 
-  if (!client) {
-    ws.send("Client not found.");
-    return;
-  }
+  var offerer = messageFields[1];
+  var client = messageFields[2];
+
 
   for (let session of onGoingSessions) {
     if (session.isOnSession(offerer) || session.isOnSession(client)) {
@@ -27,22 +29,36 @@ export async function startSession(
       return;
     }
   }
-
+  
   const session = new Session(offerer, client);
   session.startSession();
+  
   onGoingSessions.push(session);
 }
 
-export async function stopSession(ws, messageFields, onGoingSessions) {
+export async function stopSession(ws, messageFields, onGoingSessions, subscribers) {
+  
+  console.log("Stopping session...");
+
   var offerer = messageFields[1];
   var client = messageFields[2];
 
   var sessionIndex = onGoingSessions.findIndex(
     (s) => s.isOnSession(offerer) && s.isOnSession(client),
   );
+  
+  
+  console.log("Session index:", sessionIndex);
+
   if (sessionIndex !== -1) {
     var session = onGoingSessions[sessionIndex];
+    
     session.stopSession();
+    // console.log(`Session between ${session.name1} and ${session.name2} stopped.`);
+    
+    subscribers.sendEndSessionNotification(offerer);
+    subscribers.sendEndSessionNotification(client);
+
     onGoingSessions.splice(sessionIndex, 1);
   } else {
     ws.send("Session not found.");

@@ -121,7 +121,7 @@ async function handleMessage(message, ws) {
       break;
 
     case "stopSession":
-      stopSession(ws, messageFields, onGoingSessions);
+      stopSession(ws, messageFields, onGoingSessions, subscribers);
       break;
   }
 }
