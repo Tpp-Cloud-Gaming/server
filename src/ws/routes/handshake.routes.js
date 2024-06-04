@@ -15,6 +15,11 @@ export async function initOfferer(
 ) {
   // initOfferer|usernameOfferer
   var usernameOfferer = messageFields[1];
+  
+  if (connectedOfferers[usernameOfferer]) {    
+    return;
+  }
+
   connectedOfferers[usernameOfferer] = ws;
   console.log("initOfferer with username: " + usernameOfferer);
   subscribers.broadcastConnectionNotif(usernameOfferer);

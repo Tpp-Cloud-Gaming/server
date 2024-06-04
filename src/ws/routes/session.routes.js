@@ -53,11 +53,13 @@ export async function stopSession(ws, messageFields, onGoingSessions, subscriber
   if (sessionIndex !== -1) {
     var session = onGoingSessions[sessionIndex];
     
+    
     session.stopSession();
+    const sessionTime = session.getElapsedTime();
     // console.log(`Session between ${session.name1} and ${session.name2} stopped.`);
     
-    subscribers.sendEndSessionNotification(offerer);
-    subscribers.sendEndSessionNotification(client);
+    subscribers.sendEndSessionNotification(offerer, client, sessionTime);
+    
 
     onGoingSessions.splice(sessionIndex, 1);
   } else {

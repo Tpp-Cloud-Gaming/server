@@ -17,14 +17,22 @@ export class Session {
         return;
       }
       const currentTime = new Date();
-      console.log(
-        `Timer running: ${(currentTime - this.startTime) / 1000} seconds`,
-      );
+      // console.log(
+      //   `Timer running: ${(currentTime - this.startTime) / 1000} seconds`,
+      // );
     }, 2000);
   }
 
   isOnSession(name) {
     return name === this.name1 || name === this.name2;
+  }
+
+  getParticipants() {
+    return [this.name1, this.name2];
+  }
+
+  getElapsedTime() {
+    return this.elapsedTime;
   }
 
   stopSession() {

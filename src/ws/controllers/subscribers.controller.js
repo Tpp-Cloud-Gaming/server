@@ -63,14 +63,23 @@ export class SubscriberController {
     }
 
 
-    async sendEndSessionNotification(usernameSubscriber) {
-        const message = `notifEndSession`;
-        if (!this.subscribers.getSubscriber(usernameSubscriber)) {
-            console.log("Subscriber not found");
-            return;
+    async sendEndSessionNotification(offerer, client, sessionTime) {
+        const message = `notifEndSession|${offerer}|${client}|${sessionTime}`;
+        
+        
+        if (this.subscribers.getSubscriber(offerer)) {
+            this.subscribers.getSubscriber(offerer).send(message);            
+        }else {
+            console.log(`Subscriber ${offerer} not found`);
         }
         
-        this.subscribers.getSubscriber(usernameSubscriber).send(message);
+        if (this.subscribers.getSubscriber(client)) {
+            this.subscribers.getSubscriber(client).send(message);            
+        }else {
+            console.log(`Subscriber ${client} not found`);
+        }
+
+        return;
     }
 
     
