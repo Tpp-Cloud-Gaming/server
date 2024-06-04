@@ -16,13 +16,12 @@ export class UserController {
       attributes: ["path", "gamename"],
     });
     
-    user.credits = user.credits / 60;
-
     if (user === null) {
       return res
-        .status(404)
-        .json({ message: `Username '${username}' not found` });
+      .status(404)
+      .json({ message: `Username '${username}' not found` });
     } else {
+      user.credits = user.credits / 60;
       res.json({ user, userGames });
     }
   };
