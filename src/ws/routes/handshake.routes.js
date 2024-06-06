@@ -16,7 +16,8 @@ export async function initOfferer(
   // initOfferer|usernameOfferer
   var usernameOfferer = messageFields[1];
   
-  if (connectedOfferers[usernameOfferer]) {    
+  if (connectedOfferers[usernameOfferer]) {   
+    console.log(`Offerer ${usernameOfferer} already connected`);
     return;
   }
 
