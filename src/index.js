@@ -56,8 +56,11 @@ wss.on("connection", (ws) => {
   ws.on("close", async (ws) => {    
     // TODO: Falta terminar sesiones
     // Delete the client from connectedClients
+    let username = "";
+    
     for (let [key, value] of Object.entries(connectedClients)) {
       if (value._readyState === CLOSEDSTATE) {
+        username = key;
         delete connectedClients[key];
         console.log("Clients left:", Object.keys(connectedClients));
         break;
@@ -66,6 +69,7 @@ wss.on("connection", (ws) => {
     // Delete the offerer from connectedOfferers
     for (let [key, value] of Object.entries(connectedOfferers)) {
       if (value._readyState === CLOSEDSTATE) {
+        username = key;
         delete connectedOfferers[key];
         await subscribers.broadcastDisconnectionNotif(key);
         console.log("Offerers left:", Object.keys(connectedOfferers));
@@ -73,6 +77,17 @@ wss.on("connection", (ws) => {
       }
     }
     
+    for (let session of onGoingSessions) {
+        if (session.isOnSession(username)) {
+          session.stopSession();
+          const sessionTime = session.getElapsedTime();
+          await subscribers.sendEndSessionNotification(session.getParticipants()[0], session.getParticipants()[1], sessionTime);
+          onGoingSessions = onGoingSessions.filter((s) => !s.isOnSession(username));
+        }
+
+    }
+
+
     await subscribers.removeSubscriber(ws);
     // Lo borra si era suscriptor
     // await subscribers.removeSubscriber(ws);
@@ -84,6 +99,7 @@ wss.on("connection", (ws) => {
 async function handleMessage(message, ws) {
   const messageFields = message.toString().split("|");
   const messageType = messageFields[0];
+  // console.log("Message received: ", messageType);
   switch (messageType) {
     case "initOfferer":
       initOfferer(ws, messageFields, subscribers, connectedOfferers);

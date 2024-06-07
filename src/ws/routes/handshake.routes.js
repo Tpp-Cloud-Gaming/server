@@ -61,8 +61,7 @@ export async function initClient(
 
     connectedOfferers[usernameOfferer].send(
       `sdpRequestFrom|${usernameClient}|${gameName}|${gamePath}`,
-    );
-    console.log(`Init client ${usernameClient} with game ${gameName}`);
+    );    
   } else {
     ws.send("Offerer not found"); // TODO: definir un mensaje especifico
   }

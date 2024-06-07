@@ -9,12 +9,12 @@ export async function startSession(
 ) {
   
   if (!connectedOfferers[messageFields[1]]) {
-    ws.send("Offerer not found.");
+    // ws.send("Offerer not found.");
     return;
   }
-  
+    
     if (!connectedClients[messageFields[2]]) {
-      ws.send("Client not found.");
+      // ws.send("Client not found.");
       return;
     }
 
@@ -63,7 +63,7 @@ export async function stopSession(ws, messageFields, onGoingSessions, subscriber
 
     onGoingSessions.splice(sessionIndex, 1);
   } else {
-    ws.send("Session not found.");
+    // ws.send("Session not found.");
   }
 
   if (onGoingSessions.length == 0) {
