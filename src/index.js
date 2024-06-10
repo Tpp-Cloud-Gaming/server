@@ -61,6 +61,7 @@ wss.on("connection", (ws) => {
     for (let [key, value] of Object.entries(connectedClients)) {
       if (value._readyState === CLOSEDSTATE) {
         username = key;
+        console.log(`Client ${username} has disconnected`);
         delete connectedClients[key];
         console.log("Clients left:", Object.keys(connectedClients));
         break;
@@ -70,6 +71,7 @@ wss.on("connection", (ws) => {
     for (let [key, value] of Object.entries(connectedOfferers)) {
       if (value._readyState === CLOSEDSTATE) {
         username = key;
+        console.log(`Offerer ${username} has disconnected`);
         delete connectedOfferers[key];
         await subscribers.broadcastDisconnectionNotif(key);
         console.log("Offerers left:", Object.keys(connectedOfferers));
