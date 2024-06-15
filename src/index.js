@@ -8,7 +8,7 @@ import {
   initClient,
 } from "./ws/routes/handshake.routes.js";
 import {subscriberController} from "./ws/controllers/subscribers.controller.js";
-import { startSession, stopSession } from "./ws/routes/session.routes.js";
+import { startSession, stopSession, forceStopSession } from "./ws/routes/session.routes.js";
 import { createApp } from "./app.js";
 import { sequelize } from "./database/database.js";
 import "./models/User.js";
@@ -83,7 +83,7 @@ wss.on("connection", (ws) => {
         if (session.isOnSession(username)) {
           session.stopSession();
           const sessionTime = session.getElapsedTime();
-          await subscribers.sendEndSessionNotification(session.getParticipants()[0], session.getParticipants()[1], sessionTime);
+          // await subscribers.sendEndSessionNotification(session.getParticipants()[0], session.getParticipants()[1], sessionTime);
           onGoingSessions = onGoingSessions.filter((s) => !s.isOnSession(username));
         }
 
@@ -141,6 +141,10 @@ async function handleMessage(message, ws) {
 
     case "stopSession":
       stopSession(ws, messageFields, onGoingSessions, subscribers);
+      break;
+
+    case "forceStopSession":
+      forceStopSession(ws, messageFields, onGoingSessions, subscribers);
       break;
   }
 }

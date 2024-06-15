@@ -38,6 +38,35 @@ export async function startSession(
   subscribers.broadcastMessage(`sessionStarted|${offerer}|${client}`);
 }
 
+
+export async function forceStopSession(ws, messageFields, onGoingSessions, subscribers) {    
+    
+    console.log("Force stopping session...");    
+    
+    var sessionTerminator = messageFields[1];          
+    var sessionIndex = onGoingSessions.findIndex(
+      (s) => s.isOnSession(sessionTerminator),
+    );
+
+    if (sessionIndex !== -1) {
+
+      var session = onGoingSessions[sessionIndex];                   
+      session.stopSession();
+      const sessionTime = session.getElapsedTime();          
+      // subscribers.sendEndSessionNotification(offerer, client, sessionTime);        
+      onGoingSessions.splice(sessionIndex, 1);
+      const offerer = session.getOfferer();
+      const client = session.getClient();
+      subscribers.sendForceStopSessionNotification(sessionTerminator, offerer, client, sessionTime);
+
+    } else {
+      // ws.send("Session not found.");
+    }
+}
+
+
+
+
 export async function stopSession(ws, messageFields, onGoingSessions, subscribers) {
   
   console.log("Stopping session...");

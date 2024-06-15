@@ -1,7 +1,7 @@
 export class Session {
-  constructor(name1, name2) {
-    this.name1 = name1;
-    this.name2 = name2;
+  constructor(offerer, client) {
+    this.offerer = offerer;
+    this.client = client;
     this.timer = null;
     this.startTime = null;
     this.elapsedTime = null;
@@ -9,7 +9,7 @@ export class Session {
   }
 
   startSession() {
-    console.log(`Session started between ${this.name1} and ${this.name2}`);
+    console.log(`Session started between ${this.offerer} and ${this.client}`);
     this.startTime = Date.now();
     this.timer = setInterval(() => {
       if (this.finished) {
@@ -24,11 +24,19 @@ export class Session {
   }
 
   isOnSession(name) {
-    return name === this.name1 || name === this.name2;
+    return name === this.offerer || name === this.client;
   }
 
   getParticipants() {
-    return [this.name1, this.name2];
+    return [this.offerer, this.client];
+  }
+
+  getOfferer() {
+    return this.offerer;
+  }
+
+  getClient() {
+    return this.client;
   }
 
   getElapsedTime() {

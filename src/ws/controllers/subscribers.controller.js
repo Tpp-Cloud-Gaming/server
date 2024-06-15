@@ -83,7 +83,6 @@ export class SubscriberController {
     }
 
     
-
     async removeSubscriber(ws) {        
         for (let [subscriber,value] of Object.entries(this.subscribers.getAllSubscribers())) {            
             if (value._readyState === CLOSEDSTATE) {
@@ -93,7 +92,24 @@ export class SubscriberController {
         }
     }
 
+
+    async sendForceStopSessionNotification(sessionTerminator, offerer, client, sessionTime) {
+
+        const message = `notifForceStopSession|${sessionTerminator}|${offerer}|${client}|${sessionTime}`;
+        if (this.subscribers.getSubscriber(offerer)) {
+            this.subscribers.getSubscriber(offerer).send(message);
+        } else {
+            console.log(`Subscriber ${offerer} not found`);
+        }
+
+        if (this.subscribers.getSubscriber(client)) {
+            this.subscribers.getSubscriber(client).send(message);
+        } else {
+            console.log(`Subscriber ${client} not found`);
+        }
+    }   
 }
+
 
 
 async function buildGamesAndQualification(usernameOfferer) {
