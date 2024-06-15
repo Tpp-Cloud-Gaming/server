@@ -6,22 +6,24 @@ export async function startSession(
   onGoingSessions,
   connectedClients,
   connectedOfferers,
+  subscribers
 ) {
   
   if (!connectedOfferers[messageFields[1]]) {
     // ws.send("Offerer not found.");
     return;
   }
-    
-    if (!connectedClients[messageFields[2]]) {
-      // ws.send("Client not found.");
-      return;
-    }
-
+   
+  
+  if (!connectedClients[messageFields[2]]) {
+    // ws.send("Client not found.");
+    return;
+  }
+  
   var offerer = messageFields[1];
   var client = messageFields[2];
-
-
+  
+  
   for (let session of onGoingSessions) {
     if (session.isOnSession(offerer) || session.isOnSession(client)) {
       //ws.send("One of the users is already in a session.");
@@ -31,9 +33,9 @@ export async function startSession(
   }
   
   const session = new Session(offerer, client);
-  session.startSession();
-  
+  session.startSession();  
   onGoingSessions.push(session);
+  subscribers.broadcastMessage(`sessionStarted|${offerer}|${client}`);
 }
 
 export async function stopSession(ws, messageFields, onGoingSessions, subscribers) {

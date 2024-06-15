@@ -135,6 +135,7 @@ async function handleMessage(message, ws) {
         onGoingSessions,
         connectedClients,
         connectedOfferers,
+        subscribers
       );
       break;
 
