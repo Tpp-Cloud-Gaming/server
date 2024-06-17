@@ -46,10 +46,12 @@ export async function initClient(
   connectedClients,
   connectedOfferers,
 ) {
-  // initClient|usernameClient|usernameOfferer|gameName
+  // initClient|usernameClient|usernameOfferer|gameName|minutes
   var usernameClient = messageFields[1];
   var usernameOfferer = messageFields[2];
   var gameName = messageFields[3];
+  var minutes = messageFields[4];
+
   connectedClients[usernameClient] = ws;
 
   // sdpRequestFrom|usernameClient|gameName|gamePath
@@ -60,7 +62,7 @@ export async function initClient(
     );
 
     connectedOfferers[usernameOfferer].send(
-      `sdpRequestFrom|${usernameClient}|${gameName}|${gamePath}`,
+      `sdpRequestFrom|${usernameClient}|${gameName}|${gamePath}|${minutes}`,
     );    
   } else {
     ws.send("Offerer not found"); // TODO: definir un mensaje especifico

@@ -8,7 +8,7 @@ export class Session {
     this.finished = false;
   }
 
-  startSession() {
+  startSession(totalMinutes) {
     console.log(`Session started between ${this.offerer} and ${this.client}`);
     this.startTime = Date.now();
     this.timer = setInterval(() => {
@@ -17,9 +17,18 @@ export class Session {
         return;
       }
       const currentTime = new Date();
-      // console.log(
-      //   `Timer running: ${(currentTime - this.startTime) / 1000} seconds`,
-      // );
+      const elapsedTime = (currentTime - this.startTime) / 1000 / 60; // Convert to minutes
+
+      console.log(`Timer running: ${elapsedTime} minutes`);
+
+      if (elapsedTime >= totalMinutes) {
+        console.log(`Session finished after ${elapsedTime} minutes`);
+        this.finished = true;
+        clearInterval(this.timer);
+        // agregar para que mande stopSessionByTimer y borre la sesion
+        return;
+      }
+
     }, 2000);
   }
 

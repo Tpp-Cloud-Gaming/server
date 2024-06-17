@@ -22,6 +22,7 @@ export async function startSession(
   
   var offerer = messageFields[1];
   var client = messageFields[2];
+  var minutes = messageFields[3];
   
   
   for (let session of onGoingSessions) {
@@ -33,7 +34,7 @@ export async function startSession(
   }
   
   const session = new Session(offerer, client);
-  session.startSession();  
+  session.startSession(minutes);  
   onGoingSessions.push(session);
   subscribers.broadcastMessage(`sessionStarted|${offerer}|${client}`);
 }

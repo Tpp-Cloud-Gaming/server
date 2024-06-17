@@ -139,10 +139,6 @@ async function handleMessage(message, ws) {
       );
       break;
 
-    case "stopSession":
-      stopSession(ws, messageFields, onGoingSessions, subscribers);
-      break;
-
     case "forceStopSession":
       forceStopSession(ws, messageFields, onGoingSessions, subscribers);
       break;
