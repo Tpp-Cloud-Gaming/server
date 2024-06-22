@@ -19,6 +19,7 @@ export class Session {
   ) {
     console.log(`Session started between ${this.offerer} and ${this.client}`);
     this.startTime = Date.now();
+    console.log("total minutes",totalMinutes);
     this.timer = setInterval(async () => {
       if (this.finished) {
         clearInterval(this.timer);
