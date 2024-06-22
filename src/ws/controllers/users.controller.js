@@ -1,5 +1,6 @@
 import { UserGame } from "../../models/UserGame.js";
 import { User } from "../../models/User.js";
+import { sequelize } from "../../database/database.js";
 
 export class UserController {
   constructor() {}
@@ -25,11 +26,23 @@ export class UserController {
     return gamePath;
   };
 
-  updateCredits = async (username, new_credits) => {
-    const updatedUser = await User.findOne({
-      where: { username: username },
+  updateCredits = async (usernameOfferer, usernameClient, new_credits) => {
+    await sequelize.transaction(async (t) => {
+      const updatedOfferer = await User.findOne({
+        where: { username: usernameOfferer },
+        transaction: t,
+      });
+      console.log("offerer: ", updatedOfferer);
+      updatedOfferer.credits += new_credits;
+      await updatedOfferer.save({ transaction: t });
+
+      const updatedClient = await User.findOne({
+        where: { username: usernameClient },
+        transaction: t,
+      });
+      console.log("offerer: ", updatedClient);
+      updatedClient.credits -= new_credits;
+      await updatedClient.save({ transaction: t });
     });
-    updatedUser.credits += new_credits;
-    await updatedUser.save();
   };
 }

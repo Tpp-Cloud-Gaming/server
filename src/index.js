@@ -8,11 +8,7 @@ import {
   initClient,
 } from "./ws/routes/handshake.routes.js";
 import { subscriberController } from "./ws/controllers/subscribers.controller.js";
-import {
-  startSession,
-  stopSession,
-  forceStopSession,
-} from "./ws/routes/session.routes.js";
+import { startSession, forceStopSession } from "./ws/routes/session.routes.js";
 import { createApp } from "./app.js";
 import { sequelize } from "./database/database.js";
 import "./models/User.js";
@@ -25,7 +21,7 @@ const require = createRequire(import.meta.url);
 const swaggerFile = require("./swagger_output.json");
 async function main() {
   await sequelize.authenticate();
-  // await sequelize.sync({ force: true });
+  //await sequelize.sync({ force: true });
   console.log("Connection to Databases established");
 }
 

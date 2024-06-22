@@ -15,6 +15,9 @@ export const User = sequelize.define(
     credits: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
+      validate: {
+        min: 0,
+      },
     },
     longitude: {
       type: DataTypes.FLOAT,

@@ -19,7 +19,7 @@ export class Session {
   ) {
     console.log(`Session started between ${this.offerer} and ${this.client}`);
     this.startTime = Date.now();
-    console.log("total minutes",totalMinutes);
+    console.log("total minutes", totalMinutes);
     this.timer = setInterval(async () => {
       if (this.finished) {
         clearInterval(this.timer);
@@ -29,7 +29,7 @@ export class Session {
       const elapsedTime = (currentTime - this.startTime) / 1000 / 60; // Convert to minutes
 
       console.log(`Timer running: ${elapsedTime} minutes`);
-      console.log("Sessions: ", onGoingSessions);
+      //console.log("Sessions: ", onGoingSessions);
 
       if (elapsedTime >= totalMinutes) {
         console.log(`Session finished after ${elapsedTime} minutes`);

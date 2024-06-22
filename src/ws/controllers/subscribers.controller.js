@@ -85,7 +85,11 @@ export class SubscriberController {
 
     if (connectedOfferers[offerer]) {
       try {
-        await userController.updateCredits(offerer, sessionTime);
+        await userController.updateCredits(offerer, client, sessionTime);
+        const creditsAdd = `notifCreditAdd|${sessionTime}`;
+        this.subscribers.getSubscriber(offerer).send(creditsAdd);
+        const creditsSubtract = `notifCreditSubtract|${sessionTime}`;
+        this.subscribers.getSubscriber(client).send(creditsSubtract);
       } catch {
         console.log(`Error updating credits`);
       }
