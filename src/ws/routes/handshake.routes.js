@@ -4,7 +4,6 @@
 // } from "./subscription.routes.js";
 import { UserController } from "../controllers/users.controller.js";
 
-
 const userController = new UserController();
 
 export async function initOfferer(
@@ -15,8 +14,8 @@ export async function initOfferer(
 ) {
   // initOfferer|usernameOfferer
   var usernameOfferer = messageFields[1];
-  
-  if (connectedOfferers[usernameOfferer]) {   
+
+  if (connectedOfferers[usernameOfferer]) {
     console.log(`Offerer ${usernameOfferer} already connected`);
     return;
   }
@@ -46,10 +45,12 @@ export async function initClient(
   connectedClients,
   connectedOfferers,
 ) {
-  // initClient|usernameClient|usernameOfferer|gameName
+  // initClient|usernameClient|usernameOfferer|gameName|minutes
   var usernameClient = messageFields[1];
   var usernameOfferer = messageFields[2];
   var gameName = messageFields[3];
+  var minutes = messageFields[4];
+
   connectedClients[usernameClient] = ws;
 
   // sdpRequestFrom|usernameClient|gameName|gamePath
@@ -60,8 +61,8 @@ export async function initClient(
     );
 
     connectedOfferers[usernameOfferer].send(
-      `sdpRequestFrom|${usernameClient}|${gameName}|${gamePath}`,
-    );    
+      `sdpRequestFrom|${usernameClient}|${gameName}|${gamePath}|${minutes}`,
+    );
   } else {
     ws.send("Offerer not found"); // TODO: definir un mensaje especifico
   }

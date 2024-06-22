@@ -1,4 +1,3 @@
-import { where } from "sequelize";
 import { User } from "../../models/User.js";
 import { UserGame } from "../../models/UserGame.js";
 
@@ -15,11 +14,11 @@ export class UserController {
       where: { username: username },
       attributes: ["path", "gamename"],
     });
-    
+
     if (user === null) {
       return res
-      .status(404)
-      .json({ message: `Username '${username}' not found` });
+        .status(404)
+        .json({ message: `Username '${username}' not found` });
     } else {
       user.credits = user.credits / 60;
       res.json({ user, userGames });
@@ -44,10 +43,9 @@ export class UserController {
     }
   };
 
-  
   updateUser = async (req, res) => {
     const oldUsername = req.params.username;
-    const { username, email, credits, longitude, latitude} = req.body;
+    const { username, email, credits, longitude, latitude } = req.body;
     try {
       const updatedUser = await User.findOne({
         where: { username: oldUsername },
@@ -113,9 +111,6 @@ export class UserController {
       return res
         .status(404)
         .json({ message: `Username '${username}' not found` });
-    } 
-
-
-  }
-
+    }
+  };
 }

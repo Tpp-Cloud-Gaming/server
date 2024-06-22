@@ -50,11 +50,9 @@ export const createUserRouter = () => {
       }
       console.log("patching mercadopago mail");
       await userController.updateMercadopagoEmail(req, res);
-    }
-
+    },
   );
-  
-  
+
   router.get("/users/:username", userController.getUser);
 
   router.post("/users/:username", validateCreateUser, async (req, res) => {
@@ -87,9 +85,6 @@ export const createUserRouter = () => {
       await userController.createorUpdateUserGames(req, res);
     },
   );
-  
-  
-
 
   return router;
 };

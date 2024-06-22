@@ -1,4 +1,8 @@
-import { MercadoPagoConfig, Preference, Payment as MpPayment } from "mercadopago";
+import {
+  MercadoPagoConfig,
+  Preference,
+  Payment as MpPayment,
+} from "mercadopago";
 import { v4 as uuidv4 } from "uuid";
 import { User } from "../../models/User.js";
 import { Payment } from "../../models/Payments.js";
@@ -7,8 +11,7 @@ import { subscriberController } from "../../ws/controllers/subscribers.controlle
 const subscribers = subscriberController;
 
 export class PaymentController {
-  constructor() { }
-
+  constructor() {}
 
   createOrder = async (req, res) => {
     const username = req.body.username;
@@ -39,14 +42,13 @@ export class PaymentController {
               quantity: quantity,
               unit_price: 100,
               id: orderId,
-
             },
           ],
           purpose: "wallet_purchase",
           back_urls: {
-            "success": "https://cloud-gaming-server.onrender.com/success",
-            "pending": "https://cloud-gaming-server.onrender.com/pending",
-            "failure": "https://cloud-gaming-server.onrender.com/success/failure"
+            success: "https://cloud-gaming-server.onrender.com/success",
+            pending: "https://cloud-gaming-server.onrender.com/pending",
+            failure: "https://cloud-gaming-server.onrender.com/success/failure",
           },
           notification_url:
             "https://cloud-gaming-server.onrender.com" + "/payments/notif",
@@ -54,9 +56,7 @@ export class PaymentController {
       });
       console.log(p.sandbox_init_point);
       return res.status(201).json({ url: p.sandbox_init_point });
-
     } catch (error) {
-
       payment.destroy();
       return res.status(500);
     }
@@ -80,14 +80,13 @@ export class PaymentController {
       options: { timeout: 5000, idempotencyKey: idempotencyKey },
     });
 
-
     const payment = new MpPayment(client);
 
-    payment.get({
-      id: id,
-    })
-      .then(async r => {
-
+    payment
+      .get({
+        id: id,
+      })
+      .then(async (r) => {
         const id = r.additional_info.items[0].id;
         console.log("Payment received with order id: ", id);
         const payment = await Payment.findOne({ where: { order_id: id } });
@@ -98,7 +97,9 @@ export class PaymentController {
         const quantity = r.additional_info.items[0].quantity;
         const minutes = quantity * 60;
 
-        const user = await User.findOne({ where: { username: payment.username } });
+        const user = await User.findOne({
+          where: { username: payment.username },
+        });
 
         if (!user) {
           console.log("User not found");
@@ -114,17 +115,14 @@ export class PaymentController {
         subscribers.sendPaymentNotification(user.username, quantity);
         return res.status(200).send("ok");
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Error occurred:", error);
       });
-
   };
 
   logRecibido = async (req, res) => {
     console.log(req.path);
     console.log(req.body);
     console.log(req.query);
-  }
-
-
+  };
 }

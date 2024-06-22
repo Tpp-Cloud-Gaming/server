@@ -160,7 +160,6 @@ describe("PUT /users/:username", () => {
     let expectedUser = { ...updatedUser };
     expectedUser.mercadopago_mail = null;
 
-
     await request(app)
       .post("/users" + "/Axel")
       .send(newUser);
