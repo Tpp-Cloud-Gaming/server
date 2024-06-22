@@ -4,7 +4,6 @@
 // } from "./subscription.routes.js";
 import { UserController } from "../controllers/users.controller.js";
 
-
 const userController = new UserController();
 
 export async function initOfferer(
@@ -15,8 +14,8 @@ export async function initOfferer(
 ) {
   // initOfferer|usernameOfferer
   var usernameOfferer = messageFields[1];
-  
-  if (connectedOfferers[usernameOfferer]) {   
+
+  if (connectedOfferers[usernameOfferer]) {
     console.log(`Offerer ${usernameOfferer} already connected`);
     return;
   }
@@ -63,7 +62,7 @@ export async function initClient(
 
     connectedOfferers[usernameOfferer].send(
       `sdpRequestFrom|${usernameClient}|${gameName}|${gamePath}|${minutes}`,
-    );    
+    );
   } else {
     ws.send("Offerer not found"); // TODO: definir un mensaje especifico
   }

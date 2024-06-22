@@ -1,4 +1,5 @@
 import { UserGame } from "../../models/UserGame.js";
+import { User } from "../../models/User.js";
 
 export class UserController {
   constructor() {}
@@ -22,5 +23,13 @@ export class UserController {
     });
     const gamePath = userGameInfo[0];
     return gamePath;
+  };
+
+  updateCredits = async (username, new_credits) => {
+    const updatedUser = await User.findOne({
+      where: { username: username },
+    });
+    updatedUser.credits += new_credits;
+    await updatedUser.save();
   };
 }

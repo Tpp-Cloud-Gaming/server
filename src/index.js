@@ -7,14 +7,18 @@ import {
   disconnectOfferer,
   initClient,
 } from "./ws/routes/handshake.routes.js";
-import {subscriberController} from "./ws/controllers/subscribers.controller.js";
-import { startSession, stopSession, forceStopSession } from "./ws/routes/session.routes.js";
+import { subscriberController } from "./ws/controllers/subscribers.controller.js";
+import {
+  startSession,
+  stopSession,
+  forceStopSession,
+} from "./ws/routes/session.routes.js";
 import { createApp } from "./app.js";
 import { sequelize } from "./database/database.js";
 import "./models/User.js";
 import "./models/Game.js";
 import "./models/UserGame.js";
-import "./models/Payments.js"
+import "./models/Payments.js";
 import swaggerUi from "swagger-ui-express";
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
@@ -46,18 +50,17 @@ let connectedClients = {};
 let subscribers = subscriberController;
 let onGoingSessions = [];
 
-
 wss.on("connection", (ws) => {
   console.log("A new client connected.");
   ws.on("message", async (message) => {
     await handleMessage(message, ws);
   });
-  
-  ws.on("close", async (ws) => {    
+
+  ws.on("close", async (ws) => {
     // TODO: Falta terminar sesiones
     // Delete the client from connectedClients
     let username = "";
-    
+
     for (let [key, value] of Object.entries(connectedClients)) {
       if (value._readyState === CLOSEDSTATE) {
         username = key;
@@ -78,17 +81,17 @@ wss.on("connection", (ws) => {
         break;
       }
     }
-    
+
     for (let session of onGoingSessions) {
-        if (session.isOnSession(username)) {
-          session.stopSession();
-          const sessionTime = session.getElapsedTime();
-          // await subscribers.sendEndSessionNotification(session.getParticipants()[0], session.getParticipants()[1], sessionTime);
-          onGoingSessions = onGoingSessions.filter((s) => !s.isOnSession(username));
-        }
-
+      if (session.isOnSession(username)) {
+        session.stopSession();
+        const sessionTime = session.getElapsedTime();
+        // await subscribers.sendEndSessionNotification(session.getParticipants()[0], session.getParticipants()[1], sessionTime);
+        onGoingSessions = onGoingSessions.filter(
+          (s) => !s.isOnSession(username),
+        );
+      }
     }
-
 
     await subscribers.removeSubscriber(ws);
     // Lo borra si era suscriptor
@@ -107,7 +110,7 @@ async function handleMessage(message, ws) {
       initOfferer(ws, messageFields, subscribers, connectedOfferers);
       break;
 
-    case "disconnectOfferer":      
+    case "disconnectOfferer":
       disconnectOfferer(messageFields, subscribers, connectedOfferers);
       break;
 
@@ -121,7 +124,7 @@ async function handleMessage(message, ws) {
 
     case "clientSdp":
       clientSdp(ws, messageFields, connectedOfferers);
-    break;
+      break;
 
     case "subscribe":
       // addSubscription(ws, messageFields, subscribers, connectedOfferers);
@@ -135,7 +138,7 @@ async function handleMessage(message, ws) {
         onGoingSessions,
         connectedClients,
         connectedOfferers,
-        subscribers
+        subscribers,
       );
       break;
 

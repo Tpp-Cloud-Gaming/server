@@ -1,3 +1,5 @@
+import { stopSession } from "../routes/session.routes.js";
+
 export class Session {
   constructor(offerer, client) {
     this.offerer = offerer;
@@ -8,10 +10,16 @@ export class Session {
     this.finished = false;
   }
 
-  startSession(totalMinutes) {
+  startSession(
+    totalMinutes,
+    onGoingSessions,
+    connectedClients,
+    connectedOfferers,
+    subscribers,
+  ) {
     console.log(`Session started between ${this.offerer} and ${this.client}`);
     this.startTime = Date.now();
-    this.timer = setInterval(() => {
+    this.timer = setInterval(async () => {
       if (this.finished) {
         clearInterval(this.timer);
         return;
@@ -20,16 +28,24 @@ export class Session {
       const elapsedTime = (currentTime - this.startTime) / 1000 / 60; // Convert to minutes
 
       console.log(`Timer running: ${elapsedTime} minutes`);
+      console.log("Sessions: ", onGoingSessions);
 
       if (elapsedTime >= totalMinutes) {
         console.log(`Session finished after ${elapsedTime} minutes`);
         this.finished = true;
         clearInterval(this.timer);
-        // agregar para que mande stopSessionByTimer y borre la sesion
+        await stopSession(
+          totalMinutes,
+          onGoingSessions,
+          connectedClients,
+          connectedOfferers,
+          this.offerer,
+          this.client,
+          subscribers,
+        );
         return;
       }
-
-    }, 2000);
+    }, 10000);
   }
 
   isOnSession(name) {
