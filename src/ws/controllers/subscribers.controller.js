@@ -69,27 +69,22 @@ export class SubscriberController {
     offerer,
     client,
   ) {
-    const message = `notifEndSession|${offerer}|${client}|${sessionTime}`;
-
-    if (this.subscribers.getSubscriber(offerer)) {
-      this.subscribers.getSubscriber(offerer).send(message);
-    } else {
-      console.log(`Subscriber ${offerer} not found`);
-    }
-
-    if (this.subscribers.getSubscriber(client)) {
-      this.subscribers.getSubscriber(client).send(message);
-    } else {
-      console.log(`Subscriber ${client} not found`);
-    }
+    const message = `notifEndSession|${offerer}|${client}|${sessionTime}`;   
 
     if (connectedOfferers[offerer]) {
       try {
         await userController.updateCredits(offerer, client, sessionTime);
-        const creditsAdd = `notifCreditAdd|${sessionTime}`;
-        this.subscribers.getSubscriber(offerer).send(creditsAdd);
-        const creditsSubtract = `notifCreditSubtract|${sessionTime}`;
-        this.subscribers.getSubscriber(client).send(creditsSubtract);
+        if (this.subscribers.getSubscriber(offerer)) {
+          this.subscribers.getSubscriber(offerer).send(message);
+        } else {
+          console.log(`Subscriber ${offerer} not found`);
+        }
+    
+        if (this.subscribers.getSubscriber(client)) {
+          this.subscribers.getSubscriber(client).send(message);
+        } else {
+          console.log(`Subscriber ${client} not found`);
+        }
       } catch {
         console.log(`Error updating credits`);
       }
