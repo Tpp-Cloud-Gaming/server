@@ -31,16 +31,17 @@ export class UserController {
       const updatedOfferer = await User.findOne({
         where: { username: usernameOfferer },
         transaction: t,
+        lock: true
       });
-      console.log("offerer: ", updatedOfferer);
+
       updatedOfferer.credits += new_credits;
       await updatedOfferer.save({ transaction: t });
 
       const updatedClient = await User.findOne({
         where: { username: usernameClient },
         transaction: t,
+        lock: true
       });
-      console.log("offerer: ", updatedClient);
       updatedClient.credits -= new_credits;
       await updatedClient.save({ transaction: t });
     });
