@@ -74,8 +74,8 @@ export class Session {
     if (this.timer) {
       clearInterval(this.timer);
       const endTime = new Date();
-      this.elapsedTime = (endTime - this.startTime) / 1000; // Elapsed time in seconds
-      console.log(`Timer stopped: ${this.elapsedTime} seconds`);
+      this.elapsedTime = parseInt((endTime - this.startTime) / 1000 / 60); // Elapsed time in minutes
+      console.log(`Timer stopped: ${this.elapsedTime} minutes`);
     } else {
       console.log("Timer is not running.");
     }

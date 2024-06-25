@@ -9,6 +9,7 @@ import { Payment } from "../../models/Payments.js";
 import { subscriberController } from "../../ws/controllers/subscribers.controller.js";
 
 const subscribers = subscriberController;
+const hourPrice = 3000;
 
 export class PaymentController {
   constructor() {}
@@ -95,7 +96,7 @@ export class PaymentController {
           return;
         }
         const quantity = r.additional_info.items[0].quantity;
-        const minutes = quantity * 60;
+        const minutes = quantity * 60 / 3000;
 
         const user = await User.findOne({
           where: { username: payment.username },

@@ -95,7 +95,6 @@ export async function stopSession(
     var session = onGoingSessions[sessionIndex];
 
     session.stopSession();
-    const sessionTime = session.getElapsedTime();
     // console.log(`Session between ${session.name1} and ${session.name2} stopped.`);
 
     subscribers.sendEndSessionNotification(
