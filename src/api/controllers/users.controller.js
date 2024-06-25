@@ -20,7 +20,6 @@ export class UserController {
         .status(404)
         .json({ message: `Username '${username}' not found` });
     } else {
-      user.credits = user.credits / 60;
       res.json({ user, userGames });
     }
   };

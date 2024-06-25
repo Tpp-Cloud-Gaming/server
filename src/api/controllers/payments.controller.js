@@ -96,7 +96,7 @@ export class PaymentController {
           return;
         }
         const quantity = r.additional_info.items[0].quantity;
-        const minutes = quantity * 60 / 3000;
+        const minutes = quantity * 60 / hourPrice;
 
         const user = await User.findOne({
           where: { username: payment.username },
