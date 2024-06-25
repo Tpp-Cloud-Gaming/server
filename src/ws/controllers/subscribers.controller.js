@@ -119,20 +119,25 @@ export class SubscriberController {
     client,
     sessionTime,
   ) {
-    const message = `notifForceStopSession|${sessionTerminator}|${offerer}|${client}|${sessionTime}`;
-    console.log(message);
-    if (this.subscribers.getSubscriber(offerer)) {
-      console.log("Sending force stop session notification to", offerer);
-      this.subscribers.getSubscriber(offerer).send(message);
-    } else {
-      console.log(`Subscriber ${offerer} not found`);
-    }
+    try {
+      await userController.updateCredits(offerer, client, sessionTime);
+      const message = `notifForceStopSession|${sessionTerminator}|${offerer}|${client}|${sessionTime}`;
+      console.log(message);
+      if (this.subscribers.getSubscriber(offerer)) {
+        console.log("Sending force stop session notification to", offerer);
+        this.subscribers.getSubscriber(offerer).send(message);
+      } else {
+        console.log(`Subscriber ${offerer} not found`);
+      }
+  
+      if (this.subscribers.getSubscriber(client)) {
+        console.log("Sending force stop session notification to", client);
+        this.subscribers.getSubscriber(client).send(message);
+      } else {
+        console.log(`Subscriber ${client} not found`);
+      }
+    } catch {
 
-    if (this.subscribers.getSubscriber(client)) {
-      console.log("Sending force stop session notification to", client);
-      this.subscribers.getSubscriber(client).send(message);
-    } else {
-      console.log(`Subscriber ${client} not found`);
     }
   }
 }
