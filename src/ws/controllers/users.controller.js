@@ -27,23 +27,19 @@ export class UserController {
   };
 
   updateCredits = async (usernameOfferer, usernameClient, new_credits) => {
-    await sequelize.transaction(async (t) => {
-      const updatedOfferer = await User.findOne({
-        where: { username: usernameOfferer },
-        transaction: t,
-        lock: true
-      });
-
-      updatedOfferer.credits += new_credits;
-      await updatedOfferer.save({ transaction: t });
-
-      const updatedClient = await User.findOne({
-        where: { username: usernameClient },
-        transaction: t,
-        lock: true
-      });
-      updatedClient.credits -= new_credits;
-      await updatedClient.save({ transaction: t });
+    const updatedOfferer = await User.findOne({
+        where: { username: usernameOfferer }        
     });
+
+    updatedOfferer.credits += new_credits;
+    await updatedOfferer.save();
+
+    const updatedClient = await User.findOne({
+      where: { username: usernameClient }
+    });
+
+    updatedClient.credits -= new_credits;
+    await updatedClient.save();
+    
   };
 }
