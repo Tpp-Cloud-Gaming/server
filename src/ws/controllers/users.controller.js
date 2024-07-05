@@ -27,14 +27,14 @@ export class UserController {
   };
 
   updateCredits = async (usernameOfferer, usernameClient, new_credits) => {
-    const updatedOfferer = await User.findOne({
+    let updatedOfferer = await User.findOne({
         where: { username: usernameOfferer }        
     });
 
     updatedOfferer.credits += new_credits;
     await updatedOfferer.save();
 
-    const updatedClient = await User.findOne({
+    let updatedClient = await User.findOne({
       where: { username: usernameClient }
     });
 
