@@ -30,9 +30,12 @@ export class UserController {
     let updatedOfferer = await User.findOne({
         where: { username: usernameOfferer }        
     });
-
+    console.log("Hice la busqueda bien");
     updatedOfferer.credits += new_credits;
+    console.log("Sume bien");
+
     await updatedOfferer.save();
+    console.log("Guarde bien");
 
     let updatedClient = await User.findOne({
       where: { username: usernameClient }
