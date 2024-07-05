@@ -27,28 +27,22 @@ export class UserController {
   };
 
   updateCredits = async (usernameOfferer, usernameClient, new_credits) => {
-    try {
+    
       
       let updatedOfferer = await User.findOne({
           where: { username: usernameOfferer }        
       });
-      console.log("Hice la busqueda bien");
-      updatedOfferer.credits += new_credits;
-      console.log("Sume bien");
+      updatedOfferer.credits += parseInt(new_credits);
   
       await updatedOfferer.save();
-      console.log("Guarde bien");
   
       let updatedClient = await User.findOne({
         where: { username: usernameClient }
       });
   
-      updatedClient.credits -= new_credits;
+      updatedClient.credits -= parseInt(new_credits);
       await updatedClient.save();
-    } catch (e) {
-      console.log("Completo: ",e);
-      console.log("Msj: ",e.message);
-    }
+    
     
   };
 }
