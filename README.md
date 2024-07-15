@@ -1,6 +1,6 @@
 # Servidor central
 
-Este repositorio contiene el código relacionado al servidor central del proyecto Cloud Gaming Rental Service descrito en el siguiente [informe](https://docs.google.com/document/d/1Tr2zDrDpN2i8lYJDqmhYYlrNpdic8qFr8d-Lg0Pwezk/edit).
+Este repositorio contiene el código relacionado al servidor central del proyecto Cloud Gaming Rental Service descrito en el siguiente [informe]([https://docs.google.com/document/d/1Tr2zDrDpN2i8lYJDqmhYYlrNpdic8qFr8d-Lg0Pwezk/edit](https://drive.google.com/file/d/1G9Y-qSAztYXd9f97DJ-oina4pQhgBauq/view?usp=sharing)).
 
 ## Dependencias
 
