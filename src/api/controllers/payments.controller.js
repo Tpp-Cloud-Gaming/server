@@ -41,7 +41,7 @@ export class PaymentController {
             {
               title: "Cloud Gaming",
               quantity: quantity,
-              unit_price: 100,
+              unit_price: quantity * hourPrice,
               id: orderId,
             },
           ],
@@ -96,7 +96,7 @@ export class PaymentController {
           return;
         }
         const quantity = r.additional_info.items[0].quantity;
-        const minutes = quantity * 60 / hourPrice;
+        const minutes = quantity * 60;
 
         const user = await User.findOne({
           where: { username: payment.username },
@@ -109,7 +109,7 @@ export class PaymentController {
 
         payment.set({ status: "approved" });
         await payment.save();
-        let new_credits = user.credits + minutes;
+        let new_credits = user.credits + parseInt(minutes);
         user.set({ credits: new_credits });
         await user.save();
 
